@@ -1,0 +1,26 @@
+[Unit]
+Description=IBus Daemon for GNOME
+CollectMode=inactive-or-failed
+
+# Require GNOME session and specify startup ordering
+After=gnome-session-manager@sway-gnome.service
+Wants=gnome-session-manager@sway-gnome.service
+Requisite=sway-session-gsm.target
+PartOf=sway-session-gsm.target
+Before=sway-session-init.target
+
+# Never run in GDM
+Conflicts=gnome-session@gnome-login.target
+
+[Service]
+Type=dbus
+# Only pull --xim in X11 session, it is done via Xwayland-session.d on Wayland
+ExecStart=sh -c '/usr/bin/ibus-daemon --panel disable $([ "$XDG_SESSION_TYPE" = "x11" ] && echo "--xim")'
+Restart=on-abnormal
+BusName=org.freedesktop.IBus
+TimeoutStopSec=5
+Slice=session.slice
+
+[Install]
+WantedBy=sway-session-gsm.target
+

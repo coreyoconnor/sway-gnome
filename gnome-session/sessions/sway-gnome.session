@@ -1,0 +1,4 @@
+[GNOME Session]
+Name=Sway Gnome
+# Must be in sync with sway-session-init.target.wants
+RequiredComponents=org.gnome.SettingsDaemon.Housekeeping

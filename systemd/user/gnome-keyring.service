@@ -2,7 +2,7 @@
 Description=GNOME Keyring
 OnFailureJobMode=replace-irreversibly
 CollectMode=inactive-or-failed
-After=sway.service
+After=gnome-session-manager@sway-gnome.service
 
 [Service]
 Type=oneshot
