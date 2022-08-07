@@ -6,3 +6,4 @@ Wants=graphical-session-pre.target
 Wants=sway-session-init-done.target
 After=graphical-session-pre.target
 After=sway-session-init-done.target
+Conflicts=kanshi.service

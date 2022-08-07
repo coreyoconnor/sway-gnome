@@ -5,6 +5,7 @@ RefuseManualStart=true
 RefuseManualStop=true
 
 After=sway-session-pre-init.target
+Conflicts=org.gnome.SettingsDaemon.Housekeeping.service
 
 [Service]
 Slice=session.slice
