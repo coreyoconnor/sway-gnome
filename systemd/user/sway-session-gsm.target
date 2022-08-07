@@ -1,8 +1,6 @@
 [Unit]
-Description=sway compositor session
+Description=sway gnome session manager init
 Documentation=man:systemd.special(7)
 BindsTo=graphical-session.target
 Wants=graphical-session-pre.target
-Wants=sway-session-init-done.target
 After=graphical-session-pre.target
-After=sway-session-init-done.target

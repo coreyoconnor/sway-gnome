@@ -1,6 +1,5 @@
-# #################### #
-# < YOUR CONFIG HERE > #
-# #################### #
+# Include from your config:
+# include config.d/*
 
 bindsym XF86AudioRaiseVolume  exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume  exec pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -11,12 +10,9 @@ bindsym XF86AudioPlay         exec playerctl play-pause
 bindsym XF86AudioNext         exec playerctl next
 bindsym XF86AudioPrev         exec playerctl previous
 
-# Lockscreen
-bindsym $mod+Escape exec swaylock
 # Desktop portal
 exec /usr/libexec/xdg-desktop-portal -r
 
-exec_always systemctl --user start swaybg
-
 exec nm-applet
+
 exec sh -c 'systemctl --user import-environment; systemctl --user start sway-session.target'

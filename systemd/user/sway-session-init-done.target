@@ -1,0 +1,5 @@
+[Unit]
+Description=sway gnome init completion
+BindsTo=graphical-session.target
+Wants=sway-session-init.target
+After=sway-session-init.target

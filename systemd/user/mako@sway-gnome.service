@@ -3,6 +3,9 @@ Description=A lightweight Wayland notification daemon
 Documentation=man:mako(1)
 PartOf=graphical-session.target
 
+After=gnome-session-manager@sway-gnome.service
+Conflicts=mako.service
+
 [Service]
 Type=simple
 ExecStart=/usr/bin/mako

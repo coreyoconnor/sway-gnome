@@ -1,0 +1,10 @@
+[Unit]
+Description=Signal initialization done to GNOME Session Manager
+
+PartOf=sway-session.target
+After=gnome-session-manager@sway-gnome.service
+Requires=gnome-session-manager@sway-gnome.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/gnome-session-ctl --signal-init

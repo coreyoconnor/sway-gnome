@@ -3,6 +3,8 @@ Description=A Wayland daemon that automatically configures outputs
 Documentation=man:kanshi(1)
 PartOf=graphical-session.target
 
+Conflicts=kanshi.service
+
 [Service]
 Type=simple
 ExecStart=/usr/bin/kanshi
