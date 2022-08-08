@@ -35,6 +35,7 @@ EOF
 SYSTEMD_FILES=$(cat <<EOF
 gnome-keyring.service
 gnome-session-manager@sway-gnome.service
+gnome-session-shutdown@sway-gnome.target
 gnome-session-signal-init@sway-gnome.service
 kanshi@sway-gnome.service
 mako@sway-gnome.service

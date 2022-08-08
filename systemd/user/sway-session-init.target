@@ -2,5 +2,5 @@
 Description=sway gnome session init
 Documentation=man:systemd.special(7)
 BindsTo=graphical-session.target
-Wants=sway-session-gsm.target
+Requires=sway-session-gsm.target
 After=sway-session-gsm.target

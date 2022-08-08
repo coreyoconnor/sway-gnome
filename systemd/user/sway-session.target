@@ -1,9 +1,20 @@
 [Unit]
 Description=sway compositor session
 Documentation=man:systemd.special(7)
+
+OnFailure=gnome-session-failed.service
+OnFailureJobMode=replace
+RefuseManualStop=yes
+
 BindsTo=graphical-session.target
-Wants=graphical-session-pre.target
-Wants=sway-session-init-done.target
+Before=graphical-session.target
+
+BindsTo=gnome-session-monitor.service
+After=gnome-session-monitor.service
+
+Requires=graphical-session-pre.target
 After=graphical-session-pre.target
+
+Requires=sway-session-init-done.target
 After=sway-session-init-done.target
 Conflicts=kanshi.service
