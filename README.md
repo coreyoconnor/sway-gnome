@@ -5,7 +5,7 @@
 --------------------------------------------------------------------------------
 
 Allows you to use [Sway](https://github.com/swaywm/sway), a tiling window manager, with GNOME 3 Session
-infrastructure on Linux distributions which have GNOME >= 3.34.
+infrastructure on Linux distributions which have GNOME >= 40
 
 ## Work in progress
 
@@ -16,6 +16,8 @@ Some further unit files are included to launch as many GNOME deamons in the back
 Not all daemons are enabled and further work is necessary for full-compatibility!
 
 ## What this enables
+
+TBD for gnome 40. Don't have the gnome setting daemons starting up correctly yet.
 
  * Keybindings for controlling brightness, Play/Pause, Next/Previous Track, Mute, Volume Up/Down. You can customize [sway/config.d/gnome](./sway/config.d/gnome) after installation
  * Desktop integration for Flatpak and Snap
@@ -43,9 +45,8 @@ Not all daemons are enabled and further work is necessary for full-compatibility
 
 ## Usage
 
-You may install the system files via `sudo make install` and then copy the
-contents of `systemd/user` to `$HOME/.config/systemd/user` and adjust them for
-your personal needs.
+You may install the system files via `sudo ./system_install.sh` and then 
+`./user_install.sh`
 
 In your login manager `Sway (systemd)` should be startable as a new session.
 
