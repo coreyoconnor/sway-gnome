@@ -8,7 +8,7 @@ Conflicts=mako.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/mako
+ExecStart=/usr/bin/mako
 
 [Install]
 WantedBy=sway-session.target
