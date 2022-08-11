@@ -80,3 +80,5 @@ Linux distribution. Distro-specific extensions are maintained on the wiki.
 ## Related Projects
 
  * [sway-services](https://github.com/xdbob/sway-services) provides a minimal sway / systemd integration with no GNOME services
+ * https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/data/meson.build
+
