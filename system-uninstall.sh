@@ -2,8 +2,9 @@
 
 set -ex
 
-PATH_SWAY_SERVICE=/usr/bin/sway-service
-PATH_SWAY_SESSION=/usr/share/wayland-sessions/sway-systemd.desktop
+rm -rf /usr/local/bin/start-sway-session
+rm -rf /usr/local/bin/start-sway-gnome-session
 
-rm -f ${PATH_SWAY_SERVICE}
+PATH_SWAY_SESSION=/usr/share/wayland-sessions/sway-gnome.desktop
+
 rm -f ${PATH_SWAY_SESSION}

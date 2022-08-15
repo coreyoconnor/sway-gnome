@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Sway Gnome
+Comment=SirCmpwn's sway plus gnome
+Exec=/usr/local/bin/start-sway-session
+Type=Application
+DesktopNames=sway:GNOME
+X-GDM-SessionRegisters=true
+X-Ubuntu-Gettext-Domain=gnome-session-3.0

@@ -1,0 +1,11 @@
+[Unit]
+Description=sway gnome
+OnFailureJobMode=replace
+DefaultDependencies=no
+RefuseManualStop=yes
+
+BindsTo=graphical-session.target
+Before=graphical-session.target
+
+Wants=sway.service
+After=sway.service

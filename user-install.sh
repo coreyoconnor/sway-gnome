@@ -14,7 +14,7 @@ EOF
 SWAY_DIR=sway
 
 SWAY_CONFIGS=$(cat <<EOF
-gnome
+sway-gnome
 EOF
 )
 
@@ -26,42 +26,14 @@ EOF
 SYSTEMD_DIR=systemd/user
 
 SYSTEMD_WANTS_DIRS=$(cat <<EOF
-sway-session-init-done.target.wants
-sway-session-gsm.target.wants
-sway-session-init.target.wants
+gnome-session@sway-gnome.target.d
 EOF
 )
 
 SYSTEMD_FILES=$(cat <<EOF
-gnome-keyring.service
-gnome-session-manager@sway-gnome.service
-gnome-session-shutdown@sway-gnome.target
-gnome-session-signal-init@sway-gnome.service
 kanshi@sway-gnome.service
 mako@sway-gnome.service
-org.freedesktop.IBus.session.GNOME@sway-gnome.service
-org.gnome.SettingsDaemon.A11ySettings@sway-gnome.service
-org.gnome.SettingsDaemon.Color@sway-gnome.service
-org.gnome.SettingsDaemon.Datetime@sway-gnome.service
-org.gnome.SettingsDaemon.Housekeeping@sway-gnome.service
-org.gnome.SettingsDaemon.Keyboard@sway-gnome.service
-org.gnome.SettingsDaemon.MediaKeys@sway-gnome.service
-org.gnome.SettingsDaemon.Power@sway-gnome.service
-org.gnome.SettingsDaemon.PrintNotifications@sway-gnome.service
-org.gnome.SettingsDaemon.Rfkill@sway-gnome.service
-org.gnome.SettingsDaemon.ScreensaverProxy@sway-gnome.service
-org.gnome.SettingsDaemon.Sharing@sway-gnome.service
-org.gnome.SettingsDaemon.Smartcard@sway-gnome.service
-org.gnome.SettingsDaemon.Sound@sway-gnome.service
-org.gnome.SettingsDaemon.UsbProtection@sway-gnome.service
-org.gnome.SettingsDaemon.Wacom@sway-gnome.service
-org.gnome.SettingsDaemon.Wwan@sway-gnome.service
-org.gnome.SettingsDaemon.XSettings@sway-gnome.service
-redshift.service
-sway-session-gsm.target
-sway-session-init-done.target
-sway-session-init.target
-sway-session.target
+sway-gnome.target
 sway.service
 EOF
 )

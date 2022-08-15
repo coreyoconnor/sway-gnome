@@ -2,8 +2,8 @@
 
 set -ex
 
-PATH_SWAY_SERVICE=/usr/bin/sway-service
-PATH_SWAY_SESSION=/usr/share/wayland-sessions/sway-systemd.desktop
+install -m0755 -D start-sway-session /usr/local/bin/start-sway-session
+install -m0755 -D start-sway-gnome-session /usr/local/bin/start-sway-gnome-session
 
-install -m0644 -D wayland-sessions/sway-systemd.desktop ${PATH_SWAY_SESSION}
-install -m0755 -D sway-service ${PATH_SWAY_SERVICE}
+PATH_SWAY_SESSION=/usr/share/wayland-sessions/sway-gnome.desktop
+install -m0644 -D wayland-sessions/sway-gnome.desktop ${PATH_SWAY_SESSION}

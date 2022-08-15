@@ -10,9 +10,4 @@ bindsym XF86AudioPlay         exec playerctl play-pause
 bindsym XF86AudioNext         exec playerctl next
 bindsym XF86AudioPrev         exec playerctl previous
 
-# Desktop portal
-exec /usr/libexec/xdg-desktop-portal -r
-
-exec nm-applet
-
-exec sh -c 'systemctl --user import-environment; systemctl --user start sway-session.target'
+exec /usr/local/bin/start-sway-gnome-session

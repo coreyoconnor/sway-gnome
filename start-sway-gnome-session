@@ -1,0 +1,21 @@
+#!/bin/bash
+export XDG_CURRENT_DESKTOP=GNOME
+export XDG_SESSION_DESKTOP=${XDG_SESSION_DESKTOP:-GNOME}
+export XDG_SESSION_TYPE=wayland
+VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
+VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
+
+# DBus activation environment is independent from systemd. While most of
+# dbus-activated services are already using `SystemdService` directive, some
+# still don't and thus we should set the dbus environment with a separate
+# command.
+if hash dbus-update-activation-environment 2>/dev/null; then
+    # shellcheck disable=SC2086
+    dbus-update-activation-environment --systemd ${VARIABLES:- --all}
+fi
+
+# shellcheck disable=SC2086
+systemctl --user import-environment $VARIABLES
+
+source $(systemctl --user show-environment)
+/usr/bin/gnome-session --session=sway-gnome --systemd --debug

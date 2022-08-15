@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# Address several issues with DBus activation and systemd user sessions
+#
+# 1. DBus-activated and systemd services do not share the environment with user
+#    login session. In order to make the applications that have GUI or interact
+#    with the compositor work as a systemd user service, certain variables must
+#    be propagated to the systemd and dbus.
+#    Possible (but not exhaustive) list of variables:
+#    - DISPLAY - for X11 applications that are started as user session services
+#    - WAYLAND_DISPLAY - similarly, this is needed for wayland-native services
+#    - I3SOCK/SWAYSOCK - allow services to talk with sway using i3 IPC protocol
+#
+# 2. `xdg-desktop-portal` requires XDG_CURRENT_DESKTOP to be set in order to
+#    select the right implementation for screenshot and screencast portals.
+#    With all the numerous ways to start sway, it's not possible to rely on the
+#    right value of the XDG_CURRENT_DESKTOP variable within the login session,
+#    therefore the script will ensure that it is always set to `sway`.
+#
+# 3. GUI applications started as a systemd service (or via xdg-autostart-generator)
+#    may rely on the XDG_SESSION_TYPE variable to select the backend.
+#    Ensure that it is always set to `wayland`.
+#
+# 4. The common way to autostart a systemd service along with the desktop
+#    environment is to add it to a `graphical-session.target`. However, systemd
+#    forbids starting the graphical session target directly and encourages use
+#    of an environment-specific target units. Therefore, the integration
+#    package here provides and uses `sway-gnome.target` which would bind to
+#    the `graphical-session.target`.
+#
+# 5. Optionally, stop the target and unset the variables when the compositor
+#    exits.
+#
+# References:
+#  - https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
+#  - https://github.com/emersion/xdg-desktop-portal-wlr/wiki/systemd-user-services,-pam,-and-environment-variables
+#  - https://www.freedesktop.org/software/systemd/man/systemd.special.html#graphical-session.target
+#  - https://systemd.io/DESKTOP_ENVIRONMENTS/
+#
+export XDG_CURRENT_DESKTOP=GNOME
+export XDG_SESSION_DESKTOP=${XDG_SESSION_DESKTOP:-GNOME}
+export XDG_SESSION_TYPE=wayland
+VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
+VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
+SESSION_TARGET="sway-gnome.target"
+WITH_CLEANUP=1
+
+# Check if another Sway session is already active.
+#
+# Ignores all other kinds of parallel or nested sessions
+# (Sway on Gnome/KDE/X11/etc.), as the only way to detect these is to check
+# for (WAYLAND_)?DISPLAY and that is know to be broken on Arch.
+if systemctl --user -q is-active "$SESSION_TARGET"; then
+    echo "Another session found; refusing to overwrite the variables"
+    exit 1
+fi
+
+# reset failed state of all user units
+systemctl --user reset-failed
+
+# declare cleanup handler and run it on script termination via kill or Ctrl-C
+session_cleanup () {
+    # stop the session target and unset the variables
+    systemctl --user stop "$SESSION_TARGET"
+    if [ -n "$VARIABLES" ]; then
+        # shellcheck disable=SC2086
+        systemctl --user unset-environment $VARIABLES
+    fi
+}
+trap session_cleanup INT TERM
+
+systemctl --user start --wait "$SESSION_TARGET"
+
+# run cleanup handler on normal exit
+session_cleanup
