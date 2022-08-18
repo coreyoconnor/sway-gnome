@@ -2,6 +2,8 @@
 Description=sway - SirCmpwn's Wayland window manager
 Documentation=man:sway(5)
 BindsTo=graphical-session.target
+# manages the waybar instance itself
+Conflicts=waybar.service
 
 [Service]
 Type=simple

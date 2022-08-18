@@ -5,7 +5,8 @@ DefaultDependencies=no
 RefuseManualStop=yes
 
 BindsTo=graphical-session.target
-Before=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target
 
 Wants=sway.service
 After=sway.service

@@ -17,5 +17,6 @@ fi
 # shellcheck disable=SC2086
 systemctl --user import-environment $VARIABLES
 
-source $(systemctl --user show-environment)
-/usr/bin/gnome-session --session=sway-gnome --systemd --debug
+echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
+
+exec /usr/bin/gnome-session --session=sway-gnome --systemd --debug
