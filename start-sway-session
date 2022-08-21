@@ -37,8 +37,10 @@
 #  - https://www.freedesktop.org/software/systemd/man/systemd.special.html#graphical-session.target
 #  - https://systemd.io/DESKTOP_ENVIRONMENTS/
 #
-export XDG_CURRENT_DESKTOP=GNOME
-export XDG_SESSION_DESKTOP=${XDG_SESSION_DESKTOP:-GNOME}
+# Using "Unity" is required to get appropriate libappindicator
+# behavior *shrug*
+export XDG_CURRENT_DESKTOP=Unity
+export XDG_SESSION_DESKTOP=${XDG_SESSION_DESKTOP:-Unity}
 export XDG_SESSION_TYPE=wayland
 VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
 VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
