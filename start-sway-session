@@ -1,4 +1,4 @@
-#!/bin/bash
+#!@bash@/bin/bash
 #
 # Address several issues with DBus activation and systemd user sessions
 #
@@ -27,7 +27,7 @@
 #    of an environment-specific target units. Therefore, the integration
 #    package here provides and uses `sway-gnome.target` which would bind to
 #    the `graphical-session.target`.
-#
+
 # 5. Optionally, stop the target and unset the variables when the compositor
 #    exits.
 #
@@ -46,6 +46,8 @@ VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_T
 VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
 SESSION_TARGET="sway-gnome.target"
 WITH_CLEANUP=1
+
+export PATH=@systemd@/bin:$PATH
 
 # Check if another Sway session is already active.
 #

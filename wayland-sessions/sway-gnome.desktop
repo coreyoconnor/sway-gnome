@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Sway Gnome
 Comment=SirCmpwn's sway plus gnome
-Exec=/usr/local/bin/start-sway-session
+Exec=@startSwaySession@
 Type=Application
 DesktopNames=sway:GNOME
 X-GDM-SessionRegisters=true

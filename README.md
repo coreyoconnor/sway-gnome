@@ -5,15 +5,9 @@
 --------------------------------------------------------------------------------
 
 Allows you to use [Sway](https://github.com/swaywm/sway), a tiling window manager, with GNOME 3 Session
-infrastructure on Linux distributions which have GNOME >= 40
+infrastructure on NixOS.
 
 ## Work in progress
-
-This repository is currently work-in-progress. Right now, the Sway session is
-started by GDM, modelled after sway's [systemd integration wiki page](https://github.com/swaywm/sway/wiki/Systemd-integration).
-
-Some further unit files are included to launch as many GNOME deamons in the background as possible in a non-gnome-shell wayland session.
-Not all daemons are enabled and further work is necessary for full-compatibility!
 
 ## What this enables
 
@@ -43,16 +37,8 @@ TBD for gnome 40. Don't have the gnome setting daemons starting up correctly yet
  * Display Server settings
 
 
-## Usage
 
-You may install the system files via `sudo ./system_install.sh` and then 
-`./user_install.sh`
-
-In your login manager `Sway (systemd)` should be startable as a new session.
-
-## Dependencies
-
-You need to manually install these dependencies first:
+# includes
 
  * brightnessctl - support keybindings for screen brightness control
  * network-manager-gnome - Network Manager control applet
@@ -71,14 +57,7 @@ You need to manually install these dependencies first:
 
 ## Installation
 
-While this project can be installed with a simple `sudo make install` after fetching the Git repo,
-more effort may be required to install the dependencies, especially if they aren't packaged for your
-Linux distribution. Distro-specific extensions are maintained on the wiki.
-
- * [Installing on Ubuntu 19.10](https://github.com/Drakulix/sway-gnome/wiki/Installation#install-on-ubuntu-1910)
-
 ## Related Projects
 
  * [sway-services](https://github.com/xdbob/sway-services) provides a minimal sway / systemd integration with no GNOME services
  * https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/data/meson.build
-

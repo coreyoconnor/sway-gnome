@@ -1,4 +1,4 @@
-#!/bin/bash
+#!@bash@/bin/bash
 # Using "Unity" is required to get appropriate libappindicator
 # behavior *shrug*
 export XDG_CURRENT_DESKTOP=Unity
@@ -6,6 +6,8 @@ export XDG_SESSION_DESKTOP=${XDG_SESSION_DESKTOP:-Unity}
 export XDG_SESSION_TYPE=wayland
 VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
 VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
+
+export PATH=@dbus@/bin:@systemd@/bin:$PATH
 
 # DBus activation environment is independent from systemd. While most of
 # dbus-activated services are already using `SystemdService` directive, some
@@ -21,4 +23,4 @@ systemctl --user import-environment $VARIABLES
 
 echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
 
-exec /usr/bin/gnome-session --session=sway-gnome --systemd --debug
+exec @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug
