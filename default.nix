@@ -26,26 +26,32 @@ let
     inherit (pkgs) mako;
   };
 
+  sway = pkgs.sway.override {
+    dbusSupport = false;
+    enableXWayland = true;
+    isNixOS = true;
+    withBaseWrapper = false;
+    withGtkWrapper = true;
+  };
+
+  sway-launcher = pkgs.writeScript "sway-launcher.sh" ''
+    #!${pkgs.bash}/bin/bash
+
+    export MOZ_ENABLE_WAYLAND="1"
+    export SDL_VIDEODRIVER=wayland
+    export QT_QPA_PLATFORM=wayland-egl
+    export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+    # Fix for some Java AWT applications (e.g. Android Studio),
+    # use this if they aren't displayed properly:
+    export _JAVA_AWT_WM_NONREPARENTING=1
+    export PATH=$PATH:/run/current-system/sw/bin
+
+    exec ${sway}/bin/sway
+  '';
+
   sway-service = pkgs.substituteAll {
     src = "${./systemd/user}/sway.service";
-    sway = pkgs.sway.override {
-      dbusSupport = true;
-      enableXWayland = true;
-      extraSessionCommands = ''
-        export MOZ_ENABLE_WAYLAND="1"
-        export SDL_VIDEODRIVER=wayland
-        export QT_QPA_PLATFORM=wayland-egl
-        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-        # Fix for some Java AWT applications (e.g. Android Studio),
-        # use this if they aren't displayed properly:
-        export _JAVA_AWT_WM_NONREPARENTING=1
-        export BEMENU_BACKEND=wayland
-        export PATH=$PATH:/run/current-system/sw/bin
-      '';
-      isNixOS = true;
-      withBaseWrapper = true;
-      withGtkWrapper = true;
-    };
+    swayLauncher = sway-launcher;
   };
 
   sway-gnome-desktop = pkgs.stdenv.mkDerivation {
@@ -75,6 +81,7 @@ in {
     inherit desktop-session
       start-sway-session
       start-sway-gnome-session
+      sway-launcher
       sway-gnome-desktop;
   };
 
@@ -100,10 +107,12 @@ in {
           systemPackages = with pkgs; [ qt6Packages.qtwayland ];
         };
 
+        security.pam.services.swaylock = {};
+
         services = {
           gnome = {
             core-developer-tools.enable = true;
-            core-os-services.enable = true;
+
             core-utilities.enable = true;
             gnome-initial-setup.enable = false;
             gnome-remote-desktop.enable = false;

@@ -15,7 +15,7 @@
 #    select the right implementation for screenshot and screencast portals.
 #    With all the numerous ways to start sway, it's not possible to rely on the
 #    right value of the XDG_CURRENT_DESKTOP variable within the login session,
-#    therefore the script will ensure that it is always set to `sway`.
+#    therefore the script will ensure that it is always set to `Unity`.
 #
 # 3. GUI applications started as a systemd service (or via xdg-autostart-generator)
 #    may rely on the XDG_SESSION_TYPE variable to select the backend.
