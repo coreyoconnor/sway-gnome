@@ -23,6 +23,7 @@ let
 
   mako-sway-gnome-service = pkgs.substituteAll {
     src = "${./systemd/user}/mako@sway-gnome.service";
+    inherit (pkgs) mako;
   };
 
   sway-service = pkgs.substituteAll {
@@ -31,6 +32,7 @@ let
       dbusSupport = true;
       enableXWayland = true;
       extraSessionCommands = ''
+        export MOZ_ENABLE_WAYLAND="1"
         export SDL_VIDEODRIVER=wayland
         export QT_QPA_PLATFORM=wayland-egl
         export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
@@ -38,6 +40,7 @@ let
         # use this if they aren't displayed properly:
         export _JAVA_AWT_WM_NONREPARENTING=1
         export BEMENU_BACKEND=wayland
+        export PATH=$PATH:/run/current-system/sw/bin
       '';
       isNixOS = true;
       withBaseWrapper = true;
@@ -56,6 +59,8 @@ let
 
       mkdir -p $out/lib/systemd/user
       cp ${./systemd/user}/sway-gnome.target $out/lib/systemd/user/sway-gnome.target
+      cp ${mako-sway-gnome-service} \
+         $out/lib/systemd/user/mako@sway-gnome.service
       cp ${sway-service} $out/lib/systemd/user/sway.service
       mkdir -p $out/lib/systemd/user/gnome-session@sway-gnome.target.d
       cp ${./systemd/user}/gnome-session@sway-gnome.target.d/sway-gnome.session.conf \
@@ -86,7 +91,14 @@ in {
       };
 
       config = mkIf cfg.enable {
-        environment.systemPackages = [ qt5.qtwayland ];
+        environment = {
+          etc = {
+            "sway/config.d/sway-gnome.conf".source = pkgs.writeText "sway-gnome.conf" ''
+              exec ${start-sway-gnome-session}
+            '';
+          };
+          systemPackages = with pkgs; [ qt6Packages.qtwayland ];
+        };
 
         services = {
           gnome = {
@@ -103,7 +115,7 @@ in {
           };
         };
 
-        systemd.packages = [ pkgs.sway-gnome-desktop ];
+        systemd.packages = [ sway-gnome-desktop ];
       };
     };
 }
