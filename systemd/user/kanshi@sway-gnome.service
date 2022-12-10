@@ -10,4 +10,4 @@ Type=simple
 ExecStart=@kanshi@
 
 [Install]
-WantedBy=sway-session.target
+WantedBy=sway-gnome.target

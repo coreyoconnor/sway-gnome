@@ -38,7 +38,6 @@ let
     #!${pkgs.bash}/bin/bash
 
     export MOZ_ENABLE_WAYLAND="1"
-    export SDL_VIDEODRIVER=wayland
     export QT_QPA_PLATFORM=wayland-egl
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     # Fix for some Java AWT applications (e.g. Android Studio),

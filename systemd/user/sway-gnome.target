@@ -10,3 +10,5 @@ After=graphical-session-pre.target
 
 Wants=sway.service
 After=sway.service
+
+Wants=mako@sway-gnome.service

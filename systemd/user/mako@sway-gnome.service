@@ -9,6 +9,3 @@ Conflicts=mako.service
 [Service]
 Type=simple
 ExecStart=@mako@/bin/mako
-
-[Install]
-WantedBy=sway-session.target
