@@ -19,6 +19,9 @@ export PATH=@dbus@/bin:@systemd@/bin:$PATH
 # shellcheck disable=SC2086
 dbus-update-activation-environment --systemd ${VARIABLES:- --all}
 
+# blackhole screensaver activation messages
+dbus-test-tool black-hole --name=org.gnome.ScreenSaver.service &
+
 # shellcheck disable=SC2086
 systemctl --user import-environment $VARIABLES
 
