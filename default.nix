@@ -119,7 +119,10 @@ in {
 
           xserver = {
             desktopManager.gnome.enable = true;
-            displayManager.sessionPackages = [ sway-gnome-desktop ];
+            displayManager = {
+              defaultSession = mkDefault "sway-gnome";
+              sessionPackages = [ sway-gnome-desktop ];
+            };
           };
         };
 
