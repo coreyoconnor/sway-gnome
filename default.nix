@@ -37,13 +37,14 @@ let
   sway-launcher = pkgs.writeScript "sway-launcher.sh" ''
     #!${pkgs.bash}/bin/bash
 
+    source /etc/profile
+
     export MOZ_ENABLE_WAYLAND="1"
     export QT_QPA_PLATFORM=wayland-egl
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
-    export PATH=$PATH:/run/current-system/sw/bin
 
     exec ${sway}/bin/sway
   '';
