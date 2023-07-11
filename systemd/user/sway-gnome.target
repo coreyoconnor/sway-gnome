@@ -2,13 +2,10 @@
 Description=sway gnome
 OnFailureJobMode=replace
 DefaultDependencies=no
-RefuseManualStop=yes
 
 BindsTo=graphical-session.target
 Wants=graphical-session-pre.target
 After=graphical-session-pre.target
 
-Wants=sway.service
+BindsTo=sway.service
 After=sway.service
-
-Wants=mako@sway-gnome.service

@@ -27,10 +27,10 @@ let
   };
 
   sway = pkgs.sway.override {
-    dbusSupport = false;
+    dbusSupport = true;
     enableXWayland = true;
     isNixOS = true;
-    withBaseWrapper = false;
+    withBaseWrapper = true;
     withGtkWrapper = true;
   };
 
@@ -40,14 +40,32 @@ let
     source /etc/profile
 
     export MOZ_ENABLE_WAYLAND="1"
-    export QT_QPA_PLATFORM=wayland-egl
+    export QT_QPA_PLATFORM="wayland;xcb"
+    export SDL_VIDEODRIVER=wayland
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+    export GTK_USE_PORTAL=1
+    export NIXOS_XDG_OPEN_USE_PORTAL=1
+    export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
+    export XDG_CURRENT_DESKTOP=sway-gnome
+    export XDG_SESSION_DESKTOP=sway-gnome
+    export XDG_SESSION_TYPE=wayland
+    export DESKTOP_SESSION=sway-gnome
+    export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
 
     exec ${sway}/bin/sway
   '';
+
+  gnome-session-manager-overrides = pkgs.writeTextFile {
+    name = "overrides.conf";
+    text = ''
+      [Service]
+      ExecStart=
+      ExecStart=${pkgs.gnome.gnome-session}/bin/gnome-session --systemd-service --session=$i --debug --failsafe
+    '';
+  };
 
   sway-service = pkgs.substituteAll {
     src = "${./systemd/user}/sway.service";
@@ -69,8 +87,14 @@ let
          $out/lib/systemd/user/mako@sway-gnome.service
       cp ${sway-service} $out/lib/systemd/user/sway.service
       mkdir -p $out/lib/systemd/user/gnome-session@sway-gnome.target.d
-      cp ${./systemd/user}/gnome-session@sway-gnome.target.d/sway-gnome.session.conf \
-         $out/lib/systemd/user/gnome-session@sway-gnome.target.d/sway-gnome.session.conf
+      cp ${./systemd/user}/gnome-session@sway-gnome.target.d/session.conf \
+         $out/lib/systemd/user/gnome-session@sway-gnome.target.d/session.conf
+
+      mkdir -p $out/shared/gnome-session/sessions
+      cp ${./gnome-session/sessions/sway-gnome.session} $out/shared/gnome-session/sessions/sway-gnome.session
+
+      mkdir -p $out/lib/systemd/user/gnome-session-manager@.service.d
+      cp ${gnome-session-manager-overrides} $out/lib/systemd/user/gnome-session-manager@.service.d/overrides.conf
     '';
     passthru = {
       providedSessions = [ "sway-gnome" ];
@@ -104,50 +128,126 @@ in {
               exec ${start-sway-gnome-session}
             '';
           };
-          systemPackages = with pkgs; [ qt6Packages.qtwayland ];
+
+          pathsToLink = [
+            "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
+          ];
+
+          systemPackages = with pkgs; [
+            gnome.adwaita-icon-theme
+            gnome.gnome-bluetooth
+            gnome.gnome-color-manager
+            gnome.gnome-control-center
+            qt6Packages.qtwayland
+            fuzzel # launcher
+            glib # for gsettings
+            grim # screjnshot functionality
+            gtk3.out # for gtk-launch program
+            helvum
+            orca
+            pavucontrol
+            slurp # screenshot functionality
+            sound-theme-freedesktop
+            sway
+            swayidle
+            swaylock
+            swww
+            waybar
+            wayland
+            wlogout
+            wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
+            xdg-user-dirs
+            xdg-utils
+          ];
+        };
+
+        networking.networkmanager.enable = mkDefault true;
+
+        qt = {
+          enable = mkDefault true;
+          platformTheme = mkDefault "gnome";
+          style = mkDefault "adwaita";
         };
 
         security.pam.services.swaylock = {};
 
         services = {
-          gnome = {
-            core-developer-tools.enable = true;
+          accounts-daemon.enable = true;
 
+          dbus.enable = true;
+
+          gnome = {
+            # core-developer-tools.enable = true;
+            core-os-services.enable = false;
             core-utilities.enable = true;
+            games.enable = true;
+
             gnome-initial-setup.enable = false;
-            gnome-remote-desktop.enable = false;
+            gnome-keyring.enable = true;
+            # gnome-online-accounts.enable = mkDefault true;
+            # gnome-online-miners.enable = true;
+            # gnome-remote-desktop.enable = false;
+
+            # tracker-miners.enable = mkDefault true;
+            # tracker.enable = mkDefault true;
           };
 
+          gvfs.enable = true;
+
+          # hardware.bolt.enable = mkDefault true;
+
+          xfs.enable = false;
+
           xserver = {
-            desktopManager.gnome.enable = true;
+            enable = true;
+            desktopManager.gnome.enable = false;
             displayManager = {
+              gdm = {
+                enable = mkDefault true;
+                wayland = true;
+              };
               defaultSession = mkDefault "sway-gnome";
               sessionPackages = [ sway-gnome-desktop ];
             };
+            libinput.enable = mkDefault true;
           };
+
+
+          udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+
+          udisks2.enable = true;
+
+          upower.enable = config.powerManagement.enable;
         };
 
         systemd = {
           packages = [ sway-gnome-desktop ];
 
-          user.services = {
-            polkit-gnome-authentication-agent-1 = {
-              unitConfig = {
-                Description = "polkit-gnome-authentication-agent-1";
-                Wants = [ "graphical-session.target" ];
-                WantedBy = [ "graphical-session.target" ];
-                After = [ "graphical-session.target" ];
-              };
+          # user.services = {
+          #   polkit-gnome-authentication-agent-1 = {
+          #     unitConfig = {
+          #       Description = "polkit-gnome-authentication-agent-1";
+          #       Wants = [ "graphical-session.target" ];
+          #       WantedBy = [ "graphical-session.target" ];
+          #       After = [ "graphical-session.target" ];
+          #     };
 
-              serviceConfig = {
-                Type = "simple";
-                ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-                Restart = "on-failure";
-                RestartSec = 1;
-                TimeoutStopSec = 10;
-              };
-            };
-          };
+          #     serviceConfig = {
+          #       Type = "simple";
+          #       ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          #       Restart = "on-failure";
+          #       RestartSec = 1;
+          #       TimeoutStopSec = 10;
+          #     };
+          #   };
+          # };
+        };
+
+        xdg.icons.enable = true;
+        xdg.mime.enable = true;
+        xdg.portal = {
+          enable = true;
+          extraPortals = [ pkgs.xdg-desktop-portal-wlr pkgs.xdg-desktop-portal-gtk ];
         };
       };
     };

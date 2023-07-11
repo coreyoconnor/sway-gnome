@@ -1,13 +1,11 @@
 #!@bash@/bin/bash
-# Using "Unity" is required to get appropriate libappindicator
-# behavior *shrug*
-export XDG_CURRENT_DESKTOP=sway
-export XDG_SESSION_DESKTOP=${XDG_SESSION_DESKTOP:-sway}
-export XDG_SESSION_TYPE=wayland
+set -ex
+
 VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
 VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
 VARIABLES="${VARIABLES} MOZ_ENABLE_WAYLAND SDL_VIDEODRIVER"
 VARIABLES="${VARIABLES} QT_QPA_PLATFORM QT_WAYLAND_DISABLE_WINDOWDECORATION"
+VARIABLES="${VARIABLES} GTK_USE_PORTAL NIXOS_XDG_OPEN_USE_PORTAL"
 VARIABLES="${VARIABLES} _JAVA_AWT_WM_NONREPARENTING"
 
 export PATH=@dbus@/bin:@systemd@/bin:$PATH
@@ -27,4 +25,4 @@ systemctl --user import-environment $VARIABLES
 
 echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
 
-exec @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug
+# @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
