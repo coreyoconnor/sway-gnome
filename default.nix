@@ -32,6 +32,9 @@ let
     isNixOS = true;
     withBaseWrapper = true;
     withGtkWrapper = true;
+    extraSessionCommands = ''
+      export XDG_CURRENT_DESKTOP=GNOME-sway
+    '';
   };
 
   sway-launcher = pkgs.writeScript "sway-launcher.sh" ''
@@ -44,15 +47,15 @@ let
     export SDL_VIDEODRIVER=wayland
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     export GTK_USE_PORTAL=1
-    export NIXOS_XDG_OPEN_USE_PORTAL=1
+    # export NIXOS_XDG_OPEN_USE_PORTAL=1
     export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
-    export XDG_CURRENT_DESKTOP=sway-gnome
-    export XDG_SESSION_DESKTOP=sway-gnome
+    export XDG_CURRENT_DESKTOP=GNOME-sway
+    export XDG_SESSION_DESKTOP=GNOME-sway
     export XDG_SESSION_TYPE=wayland
-    export DESKTOP_SESSION=sway-gnome
+    export DESKTOP_SESSION=GNOME-sway
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
 
     exec ${sway}/bin/sway

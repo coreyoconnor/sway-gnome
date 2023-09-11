@@ -7,6 +7,7 @@ VARIABLES="${VARIABLES} MOZ_ENABLE_WAYLAND SDL_VIDEODRIVER"
 VARIABLES="${VARIABLES} QT_QPA_PLATFORM QT_WAYLAND_DISABLE_WINDOWDECORATION"
 VARIABLES="${VARIABLES} GTK_USE_PORTAL NIXOS_XDG_OPEN_USE_PORTAL"
 VARIABLES="${VARIABLES} _JAVA_AWT_WM_NONREPARENTING"
+VARIABLES="${VARIABLES} PATH"
 
 export PATH=@dbus@/bin:@systemd@/bin:$PATH
 
@@ -26,3 +27,4 @@ systemctl --user import-environment $VARIABLES
 echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
 
 # @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
+

@@ -3,6 +3,6 @@ Name=Sway Gnome
 Comment=SirCmpwn's sway plus gnome
 Exec=@startSwaySession@
 Type=Application
-DesktopNames=sway:GNOME
+DesktopNames=GNOME:sway
 X-GDM-SessionRegisters=true
 X-Ubuntu-Gettext-Domain=gnome-session-3.0
