@@ -1,0 +1,10 @@
+[Unit]
+Description=Refreshes NASA APOD desktop daily
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=12hr
+Unit=nasa-apod.service
+
+[Install]
+WantedBy=graphical-session.target
