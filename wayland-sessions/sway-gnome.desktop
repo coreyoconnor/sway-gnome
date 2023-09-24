@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Sway Gnome
-Comment=SirCmpwn's sway plus gnome
+Comment=A gnome session that uses Sway
 Exec=@startSwaySession@
+TryExec=gnome-session
 Type=Application
-DesktopNames=GNOME:sway
+DesktopNames=GNOME-sway;GNOME;sway
 X-GDM-SessionRegisters=true
-X-Ubuntu-Gettext-Domain=gnome-session-3.0
