@@ -1,11 +1,10 @@
 [Unit]
 Description=sway gnome
-OnFailureJobMode=replace
 DefaultDependencies=no
 
-BindsTo=graphical-session.target
-Wants=graphical-session-pre.target
-After=graphical-session-pre.target
+#Requisite=gnome-session-initialized.target
+#PartOf=gnome-session-initialized.target
+#Before=gnome-session-initialized.target
 
-BindsTo=sway.service
-After=sway.service
+Wants=sway.service
+

@@ -3,22 +3,24 @@
 }:
 with lib;
 let
-  start-sway-session = pkgs.substituteAll {
-    src = ./start-sway-session;
+  desktop-name = "GNOME";
+  start-wayland-session = pkgs.substituteAll {
+    src = ./start-wayland-session;
     isExecutable = true;
     inherit (pkgs) bash systemd;
   };
 
-  start-sway-gnome-session = pkgs.substituteAll {
-    src = ./start-sway-gnome-session;
+  start-gnome-session = pkgs.substituteAll {
+    src = ./start-gnome-session;
     isExecutable = true;
     inherit (pkgs) bash dbus systemd;
     gnomeSession = pkgs.gnome.gnome-session;
   };
 
-  desktop-session = pkgs.substituteAll {
+  wayland-session = pkgs.substituteAll {
     src = ./wayland-sessions/sway-gnome.desktop;
-    startSwaySession = start-sway-session;
+    gnomeSession = pkgs.gnome.gnome-session;
+    startWaylandSession = start-wayland-session;
   };
 
   mako-sway-gnome-service = pkgs.substituteAll {
@@ -33,7 +35,7 @@ let
     withBaseWrapper = true;
     withGtkWrapper = true;
     extraSessionCommands = ''
-      export XDG_CURRENT_DESKTOP=GNOME-sway
+      export XDG_CURRENT_DESKTOP=${desktop-name}
     '';
   };
 
@@ -46,17 +48,17 @@ let
     export QT_QPA_PLATFORM="wayland;xcb"
     export SDL_VIDEODRIVER=wayland
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-    export GTK_USE_PORTAL=1
+    #export GTK_USE_PORTAL=1
     # export NIXOS_XDG_OPEN_USE_PORTAL=1
     export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
-    export _JAVA_AWT_WM_NONREPARENTING=1
-    export XDG_CURRENT_DESKTOP=GNOME-sway
-    export XDG_SESSION_DESKTOP=GNOME-sway
-    export XDG_SESSION_TYPE=wayland
-    export DESKTOP_SESSION=GNOME-sway
-    export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
+    #export _JAVA_AWT_WM_NONREPARENTING=1
+    #export XDG_CURRENT_DESKTOP=${desktop-name}
+    #export XDG_SESSION_DESKTOP=${desktop-name}
+    #export XDG_SESSION_TYPE=wayland
+    #export DESKTOP_SESSION=${desktop-name}
+    #export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
 
     exec ${sway}/bin/sway
   '';
@@ -66,12 +68,17 @@ let
     text = ''
       [Service]
       ExecStart=
-      ExecStart=${pkgs.gnome.gnome-session}/bin/gnome-session --systemd-service --session=$i --debug --failsafe
+      ExecStart=${pkgs.gnome.gnome-session}/bin/gnome-session --systemd-service --session=%i --debug --failsafe
     '';
   };
 
   sway-service = pkgs.substituteAll {
-    src = "${./systemd/user}/sway.service";
+    src = ./systemd/user/sway.service;
+    swayLauncher = sway-launcher;
+  };
+
+  sway-desktop = pkgs.substituteAll {
+    src = ./desktop/sway.desktop;
     swayLauncher = sway-launcher;
   };
 
@@ -82,7 +89,7 @@ let
       source $stdenv/setup
 
       mkdir -p $out/share/wayland-sessions
-      cp ${desktop-session} $out/share/wayland-sessions/sway-gnome.desktop
+      cp ${wayland-session} $out/share/wayland-sessions/sway-gnome.desktop
 
       mkdir -p $out/lib/systemd/user
       cp ${./systemd/user}/sway-gnome.target $out/lib/systemd/user/sway-gnome.target
@@ -93,11 +100,14 @@ let
       cp ${./systemd/user}/gnome-session@sway-gnome.target.d/session.conf \
          $out/lib/systemd/user/gnome-session@sway-gnome.target.d/session.conf
 
-      mkdir -p $out/shared/gnome-session/sessions
-      cp ${./gnome-session/sessions/sway-gnome.session} $out/shared/gnome-session/sessions/sway-gnome.session
+      mkdir -p $out/share/gnome-session/sessions
+      cp ${./gnome-session/sessions/sway-gnome.session} $out/share/gnome-session/sessions/sway-gnome.session
 
-      mkdir -p $out/lib/systemd/user/gnome-session-manager@.service.d
-      cp ${gnome-session-manager-overrides} $out/lib/systemd/user/gnome-session-manager@.service.d/overrides.conf
+      #mkdir -p $out/lib/systemd/user/gnome-session-manager@.service.d
+      #cp ${gnome-session-manager-overrides} $out/lib/systemd/user/gnome-session-manager@.service.d/overrides.conf
+
+      mkdir -p $out/share/applications
+      cp ${sway-desktop} $out/share/applications/sway.desktop
     '';
     passthru = {
       providedSessions = [ "sway-gnome" ];
@@ -105,9 +115,9 @@ let
   };
 in {
   pkgs = {
-    inherit desktop-session
-      start-sway-session
-      start-sway-gnome-session
+    inherit wayland-session
+      start-wayland-session
+      start-gnome-session
       sway-launcher
       sway-gnome-desktop;
   };
@@ -128,7 +138,7 @@ in {
         environment = {
           etc = {
             "sway/config.d/sway-gnome.conf".source = pkgs.writeText "sway-gnome.conf" ''
-              exec ${start-sway-gnome-session}
+              exec ${start-gnome-session}
             '';
           };
 
@@ -151,9 +161,10 @@ in {
             pavucontrol
             slurp # screenshot functionality
             sound-theme-freedesktop
-            sway
+            # sway
             swayidle
             swaylock
+            sway-gnome-desktop
             swww
             waybar
             wayland
@@ -187,7 +198,7 @@ in {
 
             gnome-initial-setup.enable = false;
             gnome-keyring.enable = true;
-            # gnome-online-accounts.enable = mkDefault true;
+            gnome-online-accounts.enable = mkDefault true;
             # gnome-online-miners.enable = true;
             # gnome-remote-desktop.enable = false;
 
@@ -196,8 +207,6 @@ in {
           };
 
           gvfs.enable = true;
-
-          # hardware.bolt.enable = mkDefault true;
 
           xfs.enable = false;
 

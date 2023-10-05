@@ -1,13 +1,24 @@
 [Unit]
 Description=sway - SirCmpwn's Wayland window manager
 Documentation=man:sway(5)
-BindsTo=graphical-session.target
+OnFailure=gnome-session-shutdown.target
+OnFailureJobMode=replace-irreversibly
+CollectMode=inactive-or-failed
+RefuseManualStart=on
+RefuseManualStop=on
+#After=gnome-session-pre.target
+#Before=gnome-session-manager.target
+#Requisite=gnome-session-initialized.target
+#PartOf=gnome-session-initialized.target
+#Before=gnome-session-initialized.target
 # manages the waybar instance itself
 Conflicts=waybar.service
 
 [Service]
+Slice=session.slice
 Type=simple
 ExecStart=@swayLauncher@
-Restart=on-failure
-RestartSec=1
-TimeoutStopSec=10
+ExecStopPost=-/bin/sh -c 'test "$SERVICE_RESULT" != "exec-condition" && systemctl --user unset-environment GNOME_SETUP_DISPLAY WAYLAND_DISPLAY DISPLAY XAUTHORITY'
+Restart=no
+TimeoutStopSec=5
+

@@ -24,7 +24,7 @@ dbus-test-tool black-hole --name=org.gnome.ScreenSaver.service &
 # shellcheck disable=SC2086
 systemctl --user import-environment $VARIABLES
 
-echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
+# echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
 
-# @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
+@gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
 
