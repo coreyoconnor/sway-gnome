@@ -53,12 +53,18 @@ let
     export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
-    #export _JAVA_AWT_WM_NONREPARENTING=1
-    #export XDG_CURRENT_DESKTOP=${desktop-name}
-    #export XDG_SESSION_DESKTOP=${desktop-name}
-    #export XDG_SESSION_TYPE=wayland
-    #export DESKTOP_SESSION=${desktop-name}
-    #export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
+    export _JAVA_AWT_WM_NONREPARENTING=1
+    export XDG_CURRENT_DESKTOP=${desktop-name}
+    export XDG_SESSION_DESKTOP=${desktop-name}
+    export XDG_SESSION_TYPE=wayland
+    export DESKTOP_SESSION=${desktop-name}
+    export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
+    export GST_PLUGIN_SYSTEM_PATH_1_0=${lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
+        pkgs.gst_all_1.gst-plugins-base
+        pkgs.gst_all_1.gst-plugins-good
+        ]
+    }
+
 
     exec ${sway}/bin/sway
   '';
@@ -180,7 +186,7 @@ in {
         qt = {
           enable = mkDefault true;
           platformTheme = mkDefault "gnome";
-          style = mkDefault "adwaita";
+          style = mkDefault "adwaita-dark";
         };
 
         security.pam.services.swaylock = {};
