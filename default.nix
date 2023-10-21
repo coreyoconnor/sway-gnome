@@ -59,12 +59,6 @@ let
     export XDG_SESSION_TYPE=wayland
     export DESKTOP_SESSION=${desktop-name}
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
-    export GST_PLUGIN_SYSTEM_PATH_1_0=${lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
-        pkgs.gst_all_1.gst-plugins-base
-        pkgs.gst_all_1.gst-plugins-good
-        ]
-    }
-
 
     exec ${sway}/bin/sway
   '';
