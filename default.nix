@@ -199,11 +199,11 @@ in {
             gnome-initial-setup.enable = false;
             gnome-keyring.enable = true;
             gnome-online-accounts.enable = mkDefault true;
-            # gnome-online-miners.enable = true;
+            gnome-online-miners.enable = true;
             # gnome-remote-desktop.enable = false;
 
-            # tracker-miners.enable = mkDefault true;
-            # tracker.enable = mkDefault true;
+            tracker-miners.enable = mkDefault true;
+            tracker.enable = mkDefault true;
           };
 
           gvfs.enable = true;
