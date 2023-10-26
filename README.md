@@ -4,24 +4,38 @@
 
 --------------------------------------------------------------------------------
 
-Allows you to use [Sway](https://github.com/swaywm/sway), a tiling window manager, with GNOME 3 Session
+Allows you to use [Sway](https://github.com/swaywm/sway), a tiling window manager, with GNOME 3 session
 infrastructure on NixOS.
 
 ## Work in progress
 
 ## What this enables
 
-TBD for gnome 40. Don't have the gnome setting daemons starting up correctly yet.
+A limited combination of sway and gnome. This creates a custom gnome session that starts most
+gnome services along with the sway window manager.
+
+Stuff that kinds works:
 
  * flatpack in gnome software
- * Keyring integration
- * Accessibility Settings
- * Color Management Settings
- * Date & Time Settings ?
- * Keyboard Settings
- * Power Management Settings
- * Printer Notifications
- * Sound settings
+ * keyring integration
+
+The `gnome-control-center`, `Settings`, largely works as expected:
+
+ * account settings
+ * power management Settings
+ * printer settings
+ * sound settings
+ * network settings
+ * bluetooth settings
+ * default apps settings
+ * search settings
+
+ These settings immediately crash will result in `Settings` unable to start again:
+
+* multitasking settings
+* display settings
+
+Use dconf editor to remove the last panel setting from gnome-control-center to recover.
 
 # includes
 
@@ -39,3 +53,5 @@ EG: https://github.com/coreyoconnor/nix_configs/blob/main/modules/default.nix#L3
 
  * [sway-services](https://github.com/xdbob/sway-services) provides a minimal sway / systemd integration with no GNOME services
  * https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/data/meson.build
+
+
