@@ -113,6 +113,15 @@ let
       providedSessions = [ "sway-gnome" ];
     };
   };
+  # Prioritize nautilus by default when opening directories
+  mimeAppsList = pkgs.writeTextFile {
+    name = "gnome-mimeapps";
+    destination = "/share/applications/mimeapps.list";
+    text = ''
+      [Default Applications]
+      inode/directory=nautilus.desktop;org.gnome.Nautilus.desktop
+    '';
+  };
 in {
   pkgs = {
     inherit wayland-session
@@ -124,6 +133,7 @@ in {
 
   module = { config, pkgs, lib, ... }:
     let cfg = config.sway-gnome;
+        notExcluded = pkg: mkDefault (!(lib.elem pkg config.environment.gnome.excludePackages));
     in {
       options = {
         sway-gnome = {
@@ -144,7 +154,15 @@ in {
 
           pathsToLink = [
             "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
+            "/share/nautilus-python/extensions"
           ];
+
+          # Let nautilus find extensions
+          # TODO: Create nautilus-with-extensions package
+          sessionVariables.NAUTILUS_4_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-4";
+
+          # Override default mimeapps for nautilus
+          sessionVariables.XDG_DATA_DIRS = [ "${mimeAppsList}/share" ];
 
           systemPackages = with pkgs; [
             gnome.adwaita-icon-theme
@@ -175,7 +193,22 @@ in {
           ];
         };
 
+        fonts.fonts = with pkgs; [
+          cantarell-fonts
+          dejavu_fonts
+          source-code-pro # Default monospace font in 3.32
+          source-sans
+        ];
+
         networking.networkmanager.enable = mkDefault true;
+
+        programs = {
+          evince.enable = notExcluded pkgs.gnome.evince;
+          file-roller.enable = notExcluded pkgs.gnome.file-roller;
+          geary.enable = notExcluded pkgs.gnome.geary;
+          gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
+          seahorse.enable = notExcluded pkgs.gnome.seahorse;
+        };
 
         qt = {
           enable = mkDefault true;
@@ -183,10 +216,14 @@ in {
           style = mkDefault "adwaita-dark";
         };
 
-        security.pam.services.swaylock = {};
+        security = {
+          pam.services.swaylock = {};
+          polkit.enable = true;
+        };
 
         services = {
           accounts-daemon.enable = true;
+          avahi.enable = mkDefault true;
 
           dbus.enable = true;
 
@@ -196,17 +233,30 @@ in {
             core-utilities.enable = true;
             games.enable = true;
 
+            glib-networking.enable = true;
             gnome-initial-setup.enable = false;
             gnome-keyring.enable = true;
             gnome-online-accounts.enable = mkDefault true;
             gnome-online-miners.enable = true;
-            # gnome-remote-desktop.enable = false;
-
+            gnome-settings-daemon.enable = true;
+            sushi.enable = notExcluded pkgs.gnome.sushi;
             tracker-miners.enable = mkDefault true;
             tracker.enable = mkDefault true;
           };
 
           gvfs.enable = true;
+
+          hardware.bolt.enable = mkDefault true;
+
+          power-profiles-daemon.enable = mkDefault true;
+
+          system-config-printer.enable = (mkIf config.services.printing.enable (mkDefault true));
+
+          udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+
+          udisks2.enable = true;
+
+          upower.enable = config.powerManagement.enable;
 
           xfs.enable = false;
 
@@ -222,14 +272,8 @@ in {
               sessionPackages = [ sway-gnome-desktop ];
             };
             libinput.enable = mkDefault true;
+            updateDbusEnvironment = true;
           };
-
-
-          udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-
-          udisks2.enable = true;
-
-          upower.enable = config.powerManagement.enable;
         };
 
         systemd = {
@@ -257,9 +301,16 @@ in {
 
         xdg.icons.enable = true;
         xdg.mime.enable = true;
+
         xdg.portal = {
           enable = true;
-          extraPortals = [ pkgs.xdg-desktop-portal-wlr pkgs.xdg-desktop-portal-gtk ];
+          extraPortals = [
+           pkgs.xdg-desktop-portal-wlr
+           (pkgs.xdg-desktop-portal-gtk.override {
+             # Do not build portals that we already have.
+             buildPortalsInGnome = false;
+           })
+          ];
         };
       };
     };
