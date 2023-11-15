@@ -46,10 +46,10 @@ let
 
     export MOZ_ENABLE_WAYLAND="1"
     export QT_QPA_PLATFORM="wayland;xcb"
-    export SDL_VIDEODRIVER=wayland
+    #export SDL_VIDEODRIVER=wayland
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-    #export GTK_USE_PORTAL=1
-    # export NIXOS_XDG_OPEN_USE_PORTAL=1
+    export GTK_USE_PORTAL=1
+    export NIXOS_XDG_OPEN_USE_PORTAL=1
     export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
