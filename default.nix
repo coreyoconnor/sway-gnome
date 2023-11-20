@@ -3,7 +3,6 @@
 }:
 with lib;
 let
-  desktop-name = "GNOME";
   start-wayland-session = pkgs.substituteAll {
     src = ./start-wayland-session;
     isExecutable = true;
@@ -35,7 +34,7 @@ let
     withBaseWrapper = true;
     withGtkWrapper = true;
     extraSessionCommands = ''
-      export XDG_CURRENT_DESKTOP=${desktop-name}
+      export XDG_CURRENT_DESKTOP=GNOME;gnome;sway
     '';
   };
 
@@ -54,10 +53,8 @@ let
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
-    export XDG_CURRENT_DESKTOP=${desktop-name}
-    export XDG_SESSION_DESKTOP=${desktop-name}
+    export XDG_CURRENT_DESKTOP=GNOME;gnome;sway
     export XDG_SESSION_TYPE=wayland
-    export DESKTOP_SESSION=${desktop-name}
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
 
     exec ${sway}/bin/sway
@@ -305,11 +302,8 @@ in {
         xdg.portal = {
           enable = true;
           extraPortals = [
-           pkgs.xdg-desktop-portal-wlr
-           (pkgs.xdg-desktop-portal-gtk.override {
-             # Do not build portals that we already have.
-             buildPortalsInGnome = false;
-           })
+            pkgs.xdg-desktop-portal-wlr
+            pkgs.xdg-desktop-portal-gtk
           ];
         };
       };
