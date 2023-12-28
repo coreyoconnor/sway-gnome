@@ -34,7 +34,7 @@ let
     withBaseWrapper = true;
     withGtkWrapper = true;
     extraSessionCommands = ''
-      export XDG_CURRENT_DESKTOP=GNOME;gnome;sway
+      export XDG_CURRENT_DESKTOP=GNOME
     '';
   };
 
@@ -49,11 +49,12 @@ let
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     export GTK_USE_PORTAL=1
     export NIXOS_XDG_OPEN_USE_PORTAL=1
+    export GTK_THEME=Adwaita:dark
     export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
-    export XDG_CURRENT_DESKTOP=GNOME;gnome;sway
+    export XDG_CURRENT_DESKTOP=GNOME
     export XDG_SESSION_TYPE=wayland
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
 
@@ -190,7 +191,7 @@ in {
           ];
         };
 
-        fonts.fonts = with pkgs; [
+        fonts.packages = with pkgs; [
           cantarell-fonts
           dejavu_fonts
           source-code-pro # Default monospace font in 3.32
@@ -222,7 +223,10 @@ in {
           accounts-daemon.enable = true;
           avahi.enable = mkDefault true;
 
-          dbus.enable = true;
+          dbus = {
+            enable = true;
+            packages = [ pkgs.gcr ];
+          };
 
           gnome = {
             # core-developer-tools.enable = true;
@@ -300,11 +304,17 @@ in {
         xdg.mime.enable = true;
 
         xdg.portal = {
+          config = {
+            GNOME = {
+              default = [ "wlr" "gtk" ];
+              "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+            };
+          };
           enable = true;
           extraPortals = [
-            pkgs.xdg-desktop-portal-wlr
             pkgs.xdg-desktop-portal-gtk
           ];
+          wlr.enable = true;
         };
       };
     };
