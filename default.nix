@@ -120,6 +120,9 @@ let
       inode/directory=nautilus.desktop;org.gnome.Nautilus.desktop
     '';
   };
+
+  waybarRev = "4d076a71f7f3dde877c436b171599422cf8b1afa";
+  latestWaybar = (builtins.getFlake ("github:Alexays/Waybar/" + waybarRev)).packages.${pkgs.system}.default;
 in {
   pkgs = {
     inherit wayland-session
@@ -182,7 +185,7 @@ in {
             swaylock
             sway-gnome-desktop
             swww
-            waybar
+            latestWaybar
             wayland
             wlogout
             wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
