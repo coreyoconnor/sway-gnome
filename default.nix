@@ -1,8 +1,8 @@
-{ pkgs ? import <nixpkgs> { }
-, lib ? pkgs.lib
-}:
+{ config, pkgs, lib, ...}:
 with lib;
 let
+  cfg = config.sway-gnome;
+  notExcluded = pkg: mkDefault (!(lib.elem pkg config.environment.gnome.excludePackages));
   start-wayland-session = pkgs.substituteAll {
     src = ./start-wayland-session;
     isExecutable = true;
@@ -124,18 +124,6 @@ let
   waybarRev = "4d076a71f7f3dde877c436b171599422cf8b1afa";
   latestWaybar = (builtins.getFlake ("github:Alexays/Waybar/" + waybarRev)).packages.${pkgs.system}.default;
 in {
-  pkgs = {
-    inherit wayland-session
-      start-wayland-session
-      start-gnome-session
-      sway-launcher
-      sway-gnome-desktop;
-  };
-
-  module = { config, pkgs, lib, ... }:
-    let cfg = config.sway-gnome;
-        notExcluded = pkg: mkDefault (!(lib.elem pkg config.environment.gnome.excludePackages));
-    in {
       options = {
         sway-gnome = {
           enable = mkOption {
@@ -320,5 +308,4 @@ in {
           wlr.enable = true;
         };
       };
-    };
 }
