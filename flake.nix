@@ -3,7 +3,7 @@
 
   outputs = _: {
     nixosModules = {
-      retronix = import ./default.nix;
+      default = import ./default.nix;
     };
   };
 }
