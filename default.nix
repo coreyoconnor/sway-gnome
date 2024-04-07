@@ -2,13 +2,12 @@
   config,
   pkgs,
   lib,
-  nixpkgs-wayland,
   ...
 }:
 with lib; let
   cfg = config.sway-gnome;
   notExcluded = pkg: mkDefault (!(lib.elem pkg config.environment.gnome.excludePackages));
-  sway-gnome-pkgs = import ./pkgs { inherit config pkgs lib nixpkgs-wayland; };
+  sway-gnome-pkgs = import ./pkgs { inherit config pkgs lib; };
 in with sway-gnome-pkgs;
 {
   options = {

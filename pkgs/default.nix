@@ -2,10 +2,19 @@
   config,
   pkgs,
   lib,
-  nixpkgs-wayland,
   ...
 }:
 with lib; rec {
+  sway = pkgs.sway.override {
+    dbusSupport = true;
+    enableXWayland = true;
+    isNixOS = true;
+    withBaseWrapper = true;
+    withGtkWrapper = true;
+    extraSessionCommands = ''
+      export XDG_CURRENT_DESKTOP=GNOME
+    '';
+  };
   start-wayland-session = pkgs.substituteAll {
     src = ./start-wayland-session;
     isExecutable = true;
@@ -28,17 +37,6 @@ with lib; rec {
   mako-sway-gnome-service = pkgs.substituteAll {
     src = "${./systemd/user}/mako@sway-gnome.service";
     inherit (pkgs) mako;
-  };
-
-  sway = pkgs.sway.override {
-    dbusSupport = true;
-    enableXWayland = true;
-    isNixOS = true;
-    withBaseWrapper = true;
-    withGtkWrapper = true;
-    extraSessionCommands = ''
-      export XDG_CURRENT_DESKTOP=GNOME
-    '';
   };
 
   sway-launcher = pkgs.writeScript "sway-launcher.sh" ''
