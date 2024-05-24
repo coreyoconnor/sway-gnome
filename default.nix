@@ -83,6 +83,8 @@ in with sway-gnome-pkgs;
       geary.enable = notExcluded pkgs.gnome.geary;
       gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
       seahorse.enable = notExcluded pkgs.gnome.seahorse;
+      bash.vteIntegration = true;
+      zsh.vteIntegration = true;
     };
 
     qt = {
@@ -109,6 +111,7 @@ in with sway-gnome-pkgs;
         # core-developer-tools.enable = true;
         core-os-services.enable = false;
         core-utilities.enable = true;
+        evolution-data-server.enable = mkDefault true;
         games.enable = true;
 
         glib-networking.enable = true;
@@ -183,7 +186,7 @@ in with sway-gnome-pkgs;
     xdg.portal = {
       config = {
         GNOME = {
-          default = ["wlr" "gtk"];
+          default = ["gtk" "wlr"];
           "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
         };
       };
