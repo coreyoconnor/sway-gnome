@@ -50,12 +50,12 @@ with lib; rec {
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     export GTK_USE_PORTAL=1
     export NIXOS_XDG_OPEN_USE_PORTAL=1
-    export GTK_THEME=Adwaita:dark
     export GNOME_SESSION_DEBUG=1
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
     export XDG_CURRENT_DESKTOP=GNOME
+    export XDG_SESSION_DESKTOP=GNOME
     export XDG_SESSION_TYPE=wayland
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
 
