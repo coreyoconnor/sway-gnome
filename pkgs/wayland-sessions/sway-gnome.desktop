@@ -3,5 +3,5 @@ Name=Sway Gnome
 Comment=A gnome session that uses Sway
 Exec=@startWaylandSession@
 Type=Application
-DesktopNames=GNOME-sway;GNOME;sway
+DesktopNames=sway;GNOME
 X-GDM-SessionRegisters=true

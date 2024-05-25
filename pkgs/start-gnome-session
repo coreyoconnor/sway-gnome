@@ -1,10 +1,10 @@
 #!@bash@/bin/bash
 set -ex
 
-VARIABLES="DESKTOP_SESSION XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
+VARIABLES="XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
 VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
 VARIABLES="${VARIABLES} MOZ_ENABLE_WAYLAND SDL_VIDEODRIVER"
-VARIABLES="${VARIABLES} QT_QPA_PLATFORM QT_WAYLAND_DISABLE_WINDOWDECORATION"
+VARIABLES="${VARIABLES} QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME QT_WAYLAND_DISABLE_WINDOWDECORATION"
 VARIABLES="${VARIABLES} GTK_USE_PORTAL NIXOS_XDG_OPEN_USE_PORTAL"
 VARIABLES="${VARIABLES} _JAVA_AWT_WM_NONREPARENTING"
 VARIABLES="${VARIABLES} PATH"
@@ -13,6 +13,9 @@ VARIABLES="${VARIABLES} GIO_EXTRA_MODULES GDK_PIXBUF_MODULE_FILE"
 
 export PATH=@dbus@/bin:@systemd@/bin:$PATH
 
+# shellcheck disable=SC2086
+systemctl --user import-environment $VARIABLES
+
 # DBus activation environment is independent from systemd. While most of
 # dbus-activated services are already using `SystemdService` directive, some
 # still don't and thus we should set the dbus environment with a separate
@@ -20,13 +23,9 @@ export PATH=@dbus@/bin:@systemd@/bin:$PATH
 # shellcheck disable=SC2086
 dbus-update-activation-environment --systemd ${VARIABLES:- --all}
 
-# blackhole screensaver activation messages
-dbus-test-tool black-hole --name=org.gnome.ScreenSaver.service &
+# dbus-send --print-reply --dest=org.freedesktop.portal.Settings /org/freedesktop/portal/Settings org.freedesktop.portal.Settings.ReadAll
 
-# shellcheck disable=SC2086
-systemctl --user import-environment $VARIABLES
-
-# echo starting gnome session for sway-gnome $WAYLAND_DISPLAY
+echo "starting gnome session for sway-gnome $WAYLAND_DISPLAY"
 
 @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
 

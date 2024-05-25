@@ -6,13 +6,13 @@
 }:
 with lib; rec {
   sway = pkgs.sway.override {
-    dbusSupport = true;
+    dbusSupport = false;
     enableXWayland = true;
     isNixOS = true;
     withBaseWrapper = true;
     withGtkWrapper = true;
     extraSessionCommands = ''
-      export XDG_CURRENT_DESKTOP=GNOME
+      export XDG_CURRENT_DESKTOP="sway:GNOME"
     '';
   };
   start-wayland-session = pkgs.substituteAll {
@@ -46,7 +46,7 @@ with lib; rec {
 
     export MOZ_ENABLE_WAYLAND="1"
     export QT_QPA_PLATFORM="wayland;xcb"
-    #export SDL_VIDEODRIVER=wayland
+    export QT_QPA_PLATFORMTHEME="qt5ct:qt6ct"
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     export GTK_USE_PORTAL=1
     export NIXOS_XDG_OPEN_USE_PORTAL=1
@@ -54,7 +54,7 @@ with lib; rec {
     # Fix for some Java AWT applications (e.g. Android Studio),
     # use this if they aren't displayed properly:
     export _JAVA_AWT_WM_NONREPARENTING=1
-    export XDG_CURRENT_DESKTOP=GNOME
+    export XDG_CURRENT_DESKTOP="sway:GNOME"
     export XDG_SESSION_DESKTOP=GNOME
     export XDG_SESSION_TYPE=wayland
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules

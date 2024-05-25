@@ -52,6 +52,8 @@ in with sway-gnome-pkgs;
         helvum
         orca
         pavucontrol
+        qt5ct
+        qt6ct
         slurp # screenshot functionality
         sound-theme-freedesktop
         # sway
@@ -78,23 +80,26 @@ in with sway-gnome-pkgs;
     networking.networkmanager.enable = mkDefault true;
 
     programs = {
+      bash.vteIntegration = true;
       evince.enable = notExcluded pkgs.gnome.evince;
       file-roller.enable = notExcluded pkgs.gnome.file-roller;
       geary.enable = notExcluded pkgs.gnome.geary;
       gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
       seahorse.enable = notExcluded pkgs.gnome.seahorse;
-      bash.vteIntegration = true;
+      sway = {
+          enable = true;
+          package = null;
+      };
       zsh.vteIntegration = true;
     };
 
     qt = {
       enable = mkDefault true;
-      platformTheme = mkDefault "gnome";
-      style = mkDefault "adwaita-dark";
+      platformTheme = mkDefault null; # qt5 and qt6 config expect this.
+      style = mkDefault null; # qt5 and qt6 config expect this.
     };
 
     security = {
-      pam.services.swaylock = {};
       polkit.enable = true;
     };
 
@@ -185,14 +190,17 @@ in with sway-gnome-pkgs;
 
     xdg.portal = {
       config = {
-        GNOME = {
-          default = ["gtk" "wlr"];
+        sway = {
+          default = [ "wlr" "gtk" ];
           "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
         };
       };
       enable = true;
       extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
+        # TODO: add in a stripped down gnome portal as well
+        (pkgs.xdg-desktop-portal-gtk.override {
+          buildPortalsInGnome = true;
+        })
       ];
       wlr.enable = true;
     };
