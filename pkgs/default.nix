@@ -46,7 +46,6 @@ with lib; rec {
 
     export MOZ_ENABLE_WAYLAND="1"
     export QT_QPA_PLATFORM="wayland;xcb"
-    export QT_QPA_PLATFORMTHEME="qt5ct:qt6ct"
     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
     export GTK_USE_PORTAL=1
     export NIXOS_XDG_OPEN_USE_PORTAL=1
