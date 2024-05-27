@@ -7,148 +7,152 @@
 with lib; let
   cfg = config.sway-gnome;
   notExcluded = pkg: mkDefault (!(lib.elem pkg config.environment.gnome.excludePackages));
-  sway-gnome-pkgs = import ./pkgs { inherit config pkgs lib; };
-in with sway-gnome-pkgs;
-{
-  options = {
-    sway-gnome = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
+  sway-gnome-pkgs = import ./pkgs {inherit config pkgs lib;};
+in
+  with sway-gnome-pkgs; {
+    options = {
+      sway-gnome = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+        };
       };
     };
-  };
 
-  config = mkIf cfg.enable {
-    environment = {
-      etc = {
-        "sway/config.d/sway-gnome.conf".source = pkgs.writeText "sway-gnome.conf" ''
-          exec ${start-gnome-session}
-        '';
+    config = mkIf cfg.enable {
+      environment = {
+        etc = {
+          "sway/config.d/sway-gnome.conf".source = pkgs.writeText "sway-gnome.conf" ''
+            exec ${start-gnome-session}
+          '';
+        };
+
+        pathsToLink = [
+          "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
+          "/share/nautilus-python/extensions"
+        ];
+
+        # Let nautilus find extensions
+        # TODO: Create nautilus-with-extensions package
+        sessionVariables.NAUTILUS_4_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-4";
+
+        # Override default mimeapps for nautilus
+        sessionVariables.XDG_DATA_DIRS = ["${mimeAppsList}/share"];
+
+        systemPackages = with pkgs; [
+          gnome.adwaita-icon-theme
+          gnome.gnome-bluetooth
+          gnome.gnome-color-manager
+          gnome.gnome-control-center
+          qt6Packages.qtwayland
+          fuzzel # launcher
+          glib # for gsettings
+          grim # screjnshot functionality
+          gtk3.out # for gtk-launch program
+          helvum
+          orca
+          pavucontrol
+          qt5ct
+          qt6ct
+          slurp # screenshot functionality
+          sound-theme-freedesktop
+          # sway
+          swayidle
+          swaylock
+          sway-gnome-desktop
+          swww
+          latestWaybar
+          wayland
+          wlogout
+          wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
+          xdg-user-dirs
+          xdg-utils
+        ];
       };
 
-      pathsToLink = [
-        "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
-        "/share/nautilus-python/extensions"
+      fonts.packages = with pkgs; [
+        cantarell-fonts
+        dejavu_fonts
+        source-code-pro # Default monospace font in 3.32
+        source-sans
       ];
 
-      # Let nautilus find extensions
-      # TODO: Create nautilus-with-extensions package
-      sessionVariables.NAUTILUS_4_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-4";
+      networking.networkmanager.enable = mkDefault true;
 
-      # Override default mimeapps for nautilus
-      sessionVariables.XDG_DATA_DIRS = ["${mimeAppsList}/share"];
-
-      systemPackages = with pkgs; [
-        gnome.adwaita-icon-theme
-        gnome.gnome-bluetooth
-        gnome.gnome-color-manager
-        gnome.gnome-control-center
-        qt6Packages.qtwayland
-        fuzzel # launcher
-        glib # for gsettings
-        grim # screjnshot functionality
-        gtk3.out # for gtk-launch program
-        helvum
-        orca
-        pavucontrol
-        qt5ct
-        qt6ct
-        slurp # screenshot functionality
-        sound-theme-freedesktop
-        # sway
-        swayidle
-        swaylock
-        sway-gnome-desktop
-        swww
-        latestWaybar
-        wayland
-        wlogout
-        wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-        xdg-user-dirs
-        xdg-utils
-      ];
-    };
-
-    fonts.packages = with pkgs; [
-      cantarell-fonts
-      dejavu_fonts
-      source-code-pro # Default monospace font in 3.32
-      source-sans
-    ];
-
-    networking.networkmanager.enable = mkDefault true;
-
-    programs = {
-      bash.vteIntegration = true;
-      evince.enable = notExcluded pkgs.gnome.evince;
-      file-roller.enable = notExcluded pkgs.gnome.file-roller;
-      geary.enable = notExcluded pkgs.gnome.geary;
-      gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
-      seahorse.enable = notExcluded pkgs.gnome.seahorse;
-      sway = {
+      programs = {
+        bash.vteIntegration = true;
+        evince.enable = notExcluded pkgs.gnome.evince;
+        file-roller.enable = notExcluded pkgs.gnome.file-roller;
+        geary.enable = notExcluded pkgs.gnome.geary;
+        gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
+        seahorse.enable = notExcluded pkgs.gnome.seahorse;
+        sway = {
           enable = true;
           package = null;
-      };
-      zsh.vteIntegration = true;
-    };
-
-    qt = {
-      enable = mkDefault true;
-      platformTheme = mkDefault null; # qt5 and qt6 config expect this.
-      style = mkDefault null; # qt5 and qt6 config expect this.
-    };
-
-    security = {
-      polkit.enable = true;
-    };
-
-    services = {
-      accounts-daemon.enable = true;
-      avahi.enable = mkDefault true;
-
-      dbus = {
-        enable = true;
-        packages = [pkgs.gcr];
+        };
+        zsh.vteIntegration = true;
       };
 
-      gnome = {
-        # core-developer-tools.enable = true;
-        core-os-services.enable = false;
-        core-utilities.enable = true;
-        evolution-data-server.enable = mkDefault true;
-        games.enable = true;
-
-        glib-networking.enable = true;
-        gnome-initial-setup.enable = false;
-        gnome-keyring.enable = true;
-        gnome-online-accounts.enable = mkDefault true;
-        gnome-online-miners.enable = true;
-        gnome-settings-daemon.enable = true;
-        sushi.enable = notExcluded pkgs.gnome.sushi;
-        tracker-miners.enable = mkDefault true;
-        tracker.enable = mkDefault true;
+      qt = {
+        enable = mkDefault true;
+        platformTheme = mkDefault null; # qt5 and qt6 config expect this.
+        style = mkDefault null; # qt5 and qt6 config expect this.
       };
 
-      gvfs.enable = true;
+      security = {
+        polkit.enable = true;
+      };
 
-      hardware.bolt.enable = mkDefault true;
+      services = {
+        accounts-daemon.enable = true;
+        avahi.enable = mkDefault true;
 
-      power-profiles-daemon.enable = mkDefault true;
+        dbus = {
+          enable = true;
+          packages = [pkgs.gcr];
+        };
 
-      system-config-printer.enable = mkIf config.services.printing.enable (mkDefault true);
+        gnome = {
+          # core-developer-tools.enable = true;
+          core-os-services.enable = false;
+          core-utilities.enable = true;
+          evolution-data-server.enable = mkDefault true;
+          games.enable = true;
 
-      udev.packages = with pkgs; [gnome.gnome-settings-daemon];
+          glib-networking.enable = true;
+          gnome-initial-setup.enable = false;
+          gnome-keyring.enable = true;
+          gnome-online-accounts.enable = mkDefault true;
+          gnome-online-miners.enable = true;
+          gnome-settings-daemon.enable = true;
+          sushi.enable = notExcluded pkgs.gnome.sushi;
+          tracker-miners.enable = mkDefault true;
+          tracker.enable = mkDefault true;
+        };
 
-      udisks2.enable = true;
+        gvfs.enable = true;
 
-      upower.enable = config.powerManagement.enable;
+        hardware.bolt.enable = mkDefault true;
 
-      xfs.enable = false;
+        power-profiles-daemon.enable = mkDefault true;
 
-      xserver = {
-        enable = true;
+        system-config-printer.enable = mkIf config.services.printing.enable (mkDefault true);
+
+        udev.packages = with pkgs; [gnome.gnome-settings-daemon];
+
+        udisks2.enable = true;
+
+        upower.enable = config.powerManagement.enable;
+
+        xfs.enable = false;
+
+        xserver = {
+          enable = true; # xwayland
+          updateDbusEnvironment = true;
+        };
+
         desktopManager.gnome.enable = false;
+
         displayManager = {
           gdm = {
             enable = mkDefault true;
@@ -158,51 +162,49 @@ in with sway-gnome-pkgs;
           sessionPackages = [sway-gnome-desktop];
         };
         libinput.enable = mkDefault true;
-        updateDbusEnvironment = true;
       };
-    };
 
-    systemd = {
-      packages = [sway-gnome-desktop];
+      systemd = {
+        packages = [sway-gnome-desktop];
 
-      user.services = {
-        polkit-gnome-authentication-agent-1 = {
-          unitConfig = {
-            Description = "polkit-gnome-authentication-agent-1";
-            Wants = ["graphical-session.target"];
-            WantedBy = ["graphical-session.target"];
-            After = ["graphical-session.target"];
-          };
+        user.services = {
+          polkit-gnome-authentication-agent-1 = {
+            unitConfig = {
+              Description = "polkit-gnome-authentication-agent-1";
+              Wants = ["graphical-session.target"];
+              WantedBy = ["graphical-session.target"];
+              After = ["graphical-session.target"];
+            };
 
-          serviceConfig = {
-            Type = "simple";
-            ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-            Restart = "on-failure";
-            RestartSec = 1;
-            TimeoutStopSec = 10;
+            serviceConfig = {
+              Type = "simple";
+              ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+              Restart = "on-failure";
+              RestartSec = 1;
+              TimeoutStopSec = 10;
+            };
           };
         };
       };
-    };
 
-    xdg.icons.enable = true;
-    xdg.mime.enable = true;
+      xdg.icons.enable = true;
+      xdg.mime.enable = true;
 
-    xdg.portal = {
-      config = {
-        sway = {
-          default = [ "wlr" "gtk" ];
-          "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      xdg.portal = {
+        config = {
+          sway = {
+            default = ["wlr" "gtk"];
+            "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+          };
         };
+        enable = true;
+        extraPortals = [
+          # TODO: add in a stripped down gnome portal as well
+          (pkgs.xdg-desktop-portal-gtk.override {
+            buildPortalsInGnome = true;
+          })
+        ];
+        wlr.enable = true;
       };
-      enable = true;
-      extraPortals = [
-        # TODO: add in a stripped down gnome portal as well
-        (pkgs.xdg-desktop-portal-gtk.override {
-          buildPortalsInGnome = true;
-        })
-      ];
-      wlr.enable = true;
     };
-  };
-}
+  }
