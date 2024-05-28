@@ -147,17 +147,19 @@ in
         xfs.enable = false;
 
         xserver = {
+          desktopManager.gnome.enable = false;
+            displayManager = {
+              gdm = {
+                enable = mkDefault true;
+                wayland = true;
+              };
+            };
           enable = true; # xwayland
           updateDbusEnvironment = true;
         };
 
-        desktopManager.gnome.enable = false;
 
         displayManager = {
-          gdm = {
-            enable = mkDefault true;
-            wayland = true;
-          };
           defaultSession = mkDefault "sway-gnome";
           sessionPackages = [sway-gnome-desktop];
         };
