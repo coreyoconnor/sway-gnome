@@ -50,18 +50,18 @@ in
           grim # screjnshot functionality
           gtk3.out # for gtk-launch program
           helvum
+          latestWaybar
           orca
           pavucontrol
+          phinger-cursors
           qt5ct
           qt6ct
           slurp # screenshot functionality
           sound-theme-freedesktop
-          # sway
           swayidle
           swaylock
           sway-gnome-desktop
           swww
-          latestWaybar
           wayland
           wlogout
           wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout

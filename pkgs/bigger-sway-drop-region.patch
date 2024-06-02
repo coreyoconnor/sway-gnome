@@ -1,0 +1,19 @@
+diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
+index c525b77a..4d9b5c4f 100644
+--- a/sway/input/seatop_move_tiling.c
++++ b/sway/input/seatop_move_tiling.c
+@@ -12,11 +12,11 @@
+ #include "sway/tree/workspace.h"
+
+ // Thickness of the dropzone when dragging to the edge of a layout container
+-#define DROP_LAYOUT_BORDER 30
++#define DROP_LAYOUT_BORDER 60
+
+ // Thickness of indicator when dropping onto a titlebar.  This should be a
+ // multiple of 2.
+-#define DROP_SPLIT_INDICATOR 10
++#define DROP_SPLIT_INDICATOR 60
+
+ struct seatop_move_tiling_event {
+        struct sway_container *con;
+

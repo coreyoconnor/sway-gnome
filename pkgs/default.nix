@@ -5,7 +5,13 @@
   ...
 }:
 with lib; rec {
+  sway-unwrapped = pkgs.sway-unwrapped.overrideAttrs (_: old: {
+      patches = old.patches ++ [
+        ./bigger-sway-drop-region.patch
+      ];
+  });
   sway = pkgs.sway.override {
+    sway-unwrapped = sway-unwrapped;
     dbusSupport = false;
     enableXWayland = true;
     isNixOS = true;
