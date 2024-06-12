@@ -134,6 +134,8 @@ in
 
         hardware.bolt.enable = mkDefault true;
 
+        libinput.enable = mkDefault true;
+
         power-profiles-daemon.enable = mkDefault true;
 
         system-config-printer.enable = mkIf config.services.printing.enable (mkDefault true);
@@ -163,7 +165,6 @@ in
           defaultSession = mkDefault "sway-gnome";
           sessionPackages = [sway-gnome-desktop];
         };
-        libinput.enable = mkDefault true;
       };
 
       systemd = {
