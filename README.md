@@ -33,13 +33,13 @@ The `gnome-control-center`, `Settings`, largely works as expected:
  These settings immediately crash will result in `Settings` unable to start again:
 
 * multitasking settings
-* display settings
 
-Use dconf editor to remove the last panel setting from gnome-control-center to recover.
+Use dconf editor to remove the last panel setting from gnome-control-center if it does not start up after a
+crash.
 
 # includes
 
- * xdg-desktop-portal - desktop integration for Flatpak and Snap
+ * `xdg-desktop-portal` - desktop integration for Flatpak and Snap
  * swayidle - for idle management
  * swaylock - for screen lock
 
@@ -53,5 +53,8 @@ EG: https://github.com/coreyoconnor/nix_configs/blob/main/modules/default.nix#L3
 
  * [sway-services](https://github.com/xdbob/sway-services) provides a minimal sway / systemd integration with no GNOME services
  * https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/data/meson.build
+ * https://github.com/alebastr/sway-systemd
+
+
 
 
