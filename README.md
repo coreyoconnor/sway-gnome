@@ -37,23 +37,28 @@ The `gnome-control-center`, `Settings`, largely works as expected:
 Use dconf editor to remove the last panel setting from gnome-control-center if it does not start up after a
 crash.
 
-# includes
+## includes
 
  * `xdg-desktop-portal` - desktop integration for Flatpak and Snap
  * swayidle - for idle management
  * swaylock - for screen lock
 
-## Installation
+# Installation
 
 import as a nixos module:
 
 EG: https://github.com/coreyoconnor/nix_configs/blob/main/modules/default.nix#L3
 
-## Related Projects
+# Related Projects
 
  * [sway-services](https://github.com/xdbob/sway-services) provides a minimal sway / systemd integration with no GNOME services
  * https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/data/meson.build
  * https://github.com/alebastr/sway-systemd
+
+# References
+
+- https://github.com/emersion/xdg-desktop-portal-wlr/wiki/%22It-doesn't-work%22-Troubleshooting-Checklist
+- https://github.com/emersion/xdg-desktop-portal-wlr/wiki/systemd-user-services,-pam,-and-environment-variables
 
 
 
