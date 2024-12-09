@@ -40,10 +40,10 @@ in
         sessionVariables.XDG_DATA_DIRS = ["${mimeAppsList}/share"];
 
         systemPackages = with pkgs; [
-          gnome.adwaita-icon-theme
-          gnome.gnome-bluetooth
-          gnome.gnome-color-manager
-          gnome.gnome-control-center
+          adwaita-icon-theme
+          gnome-bluetooth
+          gnome-color-manager
+          gnome-control-center
           qt6Packages.qtwayland
           fuzzel # launcher
           glib # for gsettings
@@ -54,7 +54,7 @@ in
           orca
           pavucontrol
           phinger-cursors
-          qt5ct
+          libsForQt5.qt5ct
           qt6ct
           slurp # screenshot functionality
           sound-theme-freedesktop
@@ -123,11 +123,10 @@ in
           gnome-initial-setup.enable = false;
           gnome-keyring.enable = true;
           gnome-online-accounts.enable = mkDefault true;
-          gnome-online-miners.enable = true;
           gnome-settings-daemon.enable = true;
           sushi.enable = notExcluded pkgs.gnome.sushi;
-          tracker-miners.enable = mkDefault true;
-          tracker.enable = mkDefault true;
+          localsearch.enable = mkDefault true;
+          tinysparql.enable = mkDefault true;
         };
 
         gvfs.enable = true;
@@ -140,7 +139,7 @@ in
 
         system-config-printer.enable = mkIf config.services.printing.enable (mkDefault true);
 
-        udev.packages = with pkgs; [gnome.gnome-settings-daemon];
+        udev.packages = with pkgs; [gnome-settings-daemon];
 
         udisks2.enable = true;
 
@@ -196,16 +195,12 @@ in
       xdg.portal = {
         config = {
           sway = {
-            default = ["wlr" "gtk"];
             "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
           };
         };
         enable = true;
         extraPortals = [
-          # TODO: add in a stripped down gnome portal as well
-          (pkgs.xdg-desktop-portal-gtk.override {
-            buildPortalsInGnome = true;
-          })
+          pkgs.xdg-desktop-portal-gtk
         ];
         wlr.enable = true;
       };

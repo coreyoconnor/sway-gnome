@@ -31,12 +31,12 @@ with lib; rec {
     src = ./start-gnome-session;
     isExecutable = true;
     inherit (pkgs) bash dbus systemd;
-    gnomeSession = pkgs.gnome.gnome-session;
+    gnomeSession = pkgs.gnome-session;
   };
 
   wayland-session = pkgs.substituteAll {
     src = ./wayland-sessions/sway-gnome.desktop;
-    gnomeSession = pkgs.gnome.gnome-session;
+    gnomeSession = pkgs.gnome-session;
     startWaylandSession = start-wayland-session;
   };
 
@@ -63,6 +63,7 @@ with lib; rec {
     export XDG_SESSION_DESKTOP=GNOME
     export XDG_SESSION_TYPE=wayland
     export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
+    export XCURSOR_SIZE=48
 
     exec ${sway}/bin/sway
   '';
@@ -126,7 +127,7 @@ with lib; rec {
     text = ''
       [Service]
       ExecStart=
-      ExecStart=${pkgs.gnome.gnome-session}/bin/gnome-session --systemd-service --session=%i --debug --failsafe
+      ExecStart=${pkgs.gnome-session}/bin/gnome-session --systemd-service --session=%i --debug --failsafe
     '';
   };
 }
