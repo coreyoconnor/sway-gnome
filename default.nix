@@ -66,6 +66,7 @@ in
           wlogout
           wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
           xdg-user-dirs
+          xdg-user-dirs-gtk # Used to create the default bookmarks
           xdg-utils
         ];
       };
@@ -77,11 +78,15 @@ in
         source-sans
       ];
 
+      hardware.bluetooth.enable = mkDefault true;
+
       networking.networkmanager.enable = mkDefault true;
 
       programs = {
         bash.vteIntegration = true;
+        dconf.enable = true;
         evince.enable = notExcluded pkgs.gnome.evince;
+        evolution.enable = mkDefault true;
         file-roller.enable = notExcluded pkgs.gnome.file-roller;
         geary.enable = notExcluded pkgs.gnome.geary;
         gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
@@ -113,11 +118,21 @@ in
         };
 
         gnome = {
-          # core-developer-tools.enable = true;
+          # all appear to work
+          # core-developer-tools.enable = mkDefault true;
+
+          # need to pick a subset below
           core-os-services.enable = false;
+          # all appear to work
           core-utilities.enable = true;
+
+          # appears to work
+          at-spi2-core.enable = true;
+          # probably works? valent can't query but I get lost debugging it
           evolution-data-server.enable = mkDefault true;
-          games.enable = true;
+
+          # all appear to work
+          games.enable = mkDefault true;
 
           glib-networking.enable = true;
           gnome-initial-setup.enable = false;
@@ -134,6 +149,8 @@ in
         hardware.bolt.enable = mkDefault true;
 
         libinput.enable = mkDefault true;
+
+        orca.enable = notExcluded pkgs.orca;
 
         power-profiles-daemon.enable = mkDefault true;
 
