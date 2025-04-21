@@ -51,6 +51,7 @@ in
           gtk3.out # for gtk-launch program
           helvum
           latestWaybar
+          nm-tray
           orca
           pavucontrol
           phinger-cursors
