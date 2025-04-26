@@ -50,9 +50,9 @@ with lib; rec {
 
     source /etc/profile
 
-    export MOZ_ENABLE_WAYLAND="1"
-    export QT_QPA_PLATFORM="wayland;xcb"
-    export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+    export MOZ_ENABLE_WAYLAND=1
+    export QT_QPA_PLATFORM="wayland-egl;xcb"
+    export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
     export GTK_USE_PORTAL=1
     export NIXOS_XDG_OPEN_USE_PORTAL=1
     export GNOME_SESSION_DEBUG=1

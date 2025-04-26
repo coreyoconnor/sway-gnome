@@ -51,7 +51,6 @@ in
           gtk3.out # for gtk-launch program
           helvum
           latestWaybar
-          nm-tray
           orca
           pavucontrol
           phinger-cursors
@@ -214,6 +213,9 @@ in
         config = {
           sway = {
             "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+            "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+            "org.freedesktop.impl.portal.Screenshot" = "wlr";
+            "org.freedesktop.impl.portal.Inhibit" = "none";
           };
         };
         enable = true;
