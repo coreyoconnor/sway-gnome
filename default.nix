@@ -124,7 +124,7 @@ in
           # need to pick a subset below
           core-os-services.enable = false;
           # all appear to work
-          core-utilities.enable = true;
+          core-apps.enable = true;
 
           # appears to work
           at-spi2-core.enable = true;

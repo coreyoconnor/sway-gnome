@@ -21,28 +21,35 @@ with lib; rec {
       export XDG_CURRENT_DESKTOP="sway:GNOME"
     '';
   };
-  start-wayland-session = pkgs.substituteAll {
+  start-wayland-session = pkgs.replaceVarsWith {
     src = ./start-wayland-session;
     isExecutable = true;
-    inherit (pkgs) bash systemd;
+    replacements = {
+        inherit (pkgs) bash systemd;
+    };
   };
 
-  start-gnome-session = pkgs.substituteAll {
+  start-gnome-session = pkgs.replaceVarsWith {
     src = ./start-gnome-session;
     isExecutable = true;
-    inherit (pkgs) bash dbus systemd;
-    gnomeSession = pkgs.gnome-session;
+    replacements = {
+        inherit (pkgs) bash dbus systemd;
+        gnomeSession = pkgs.gnome-session;
+    };
   };
 
-  wayland-session = pkgs.substituteAll {
+  wayland-session = pkgs.replaceVarsWith {
     src = ./wayland-sessions/sway-gnome.desktop;
-    gnomeSession = pkgs.gnome-session;
-    startWaylandSession = start-wayland-session;
+    replacements = {
+        startWaylandSession = start-wayland-session;
+    };
   };
 
-  mako-sway-gnome-service = pkgs.substituteAll {
+  mako-sway-gnome-service = pkgs.replaceVarsWith {
     src = "${./systemd/user}/mako@sway-gnome.service";
-    inherit (pkgs) mako;
+    replacements = {
+        inherit (pkgs) mako;
+    };
   };
 
   sway-launcher = pkgs.writeScript "sway-launcher.sh" ''
@@ -68,14 +75,18 @@ with lib; rec {
     exec ${sway}/bin/sway
   '';
 
-  sway-service = pkgs.substituteAll {
+  sway-service = pkgs.replaceVarsWith {
     src = ./systemd/user/sway.service;
-    swayLauncher = sway-launcher;
+    replacements = {
+        swayLauncher = sway-launcher;
+    };
   };
 
-  sway-desktop = pkgs.substituteAll {
+  sway-desktop = pkgs.replaceVarsWith {
     src = ./desktop/sway.desktop;
-    swayLauncher = sway-launcher;
+    replacements = {
+        swayLauncher = sway-launcher;
+    };
   };
 
   sway-gnome-desktop = pkgs.stdenv.mkDerivation {
