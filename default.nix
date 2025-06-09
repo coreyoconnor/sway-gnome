@@ -181,6 +181,16 @@ in
           defaultSession = mkDefault "sway-gnome";
           sessionPackages = [sway-gnome-desktop];
         };
+
+        pipewire = {
+          enable = mkDefault true;
+          alsa = {
+            enable = mkDefault true;
+            support32Bit = mkDefault true;
+          };
+          pulse.enable = mkDefault true;
+          wireplumber.enable = mkDefault true;
+        };
       };
 
       systemd = {
