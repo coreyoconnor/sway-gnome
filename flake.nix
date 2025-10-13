@@ -19,6 +19,7 @@
       formatter = nixpkgs.legacyPackages.${system}.writeScriptBin "alejandra" ''
         exec ${nixpkgs.legacyPackages.${system}.alejandra}/bin/alejandra \
           --exclude ./dev-dependencies \
+          --exclude ./dev \
           --exclude ./.git \
           "$@"
       '';
