@@ -1,0 +1,8 @@
+[Unit]
+After=graphical-session.target
+
+After=gnome-session-initialized.target
+
+Wants=xdg-desktop-autostart.target
+Before=xdg-desktop-autostart.target
+

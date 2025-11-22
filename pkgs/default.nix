@@ -102,6 +102,8 @@ with lib; rec {
       cp ${./systemd/user}/sway-gnome.target $out/lib/systemd/user/sway-gnome.target
       cp ${mako-sway-gnome-service} \
          $out/lib/systemd/user/mako@sway-gnome.service
+      cp "${./systemd/user}/xdg-autostart-sway-gnome.target" \
+         $out/lib/systemd/user/xdg-autostart-sway-gnome.target
       cp ${sway-service} $out/lib/systemd/user/sway.service
       mkdir -p $out/lib/systemd/user/gnome-session@sway-gnome.target.d
       cp ${./systemd/user}/gnome-session@sway-gnome.target.d/session.conf \

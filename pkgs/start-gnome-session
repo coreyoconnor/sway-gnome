@@ -12,6 +12,9 @@ VARIABLES="${VARIABLES} GIO_EXTRA_MODULES GDK_PIXBUF_MODULE_FILE"
 VARIABLES="${VARIABLES} XCURSOR_THEME XCURSOR_SIZE"
 VARIABLES="${VARIABLES} PATH"
 
+# fcitx5
+VARIABLES="${VARIABLES} XMODIFIERS QT_PLUGIN_PATH GTK_IM_MODULE QT_IM_MODULE"
+
 export PATH=@dbus@/bin:@systemd@/bin:$PATH
 
 # shellcheck disable=SC2086
@@ -29,4 +32,6 @@ dbus-update-activation-environment --systemd ${VARIABLES:- --all}
 echo "starting gnome session for sway-gnome $WAYLAND_DISPLAY"
 
 @gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
+
+systemctl --user start xdg-autostart-sway-gnome.target
 
