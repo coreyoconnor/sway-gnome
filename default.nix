@@ -46,8 +46,9 @@ in
           gnome-control-center
           qt6Packages.qtwayland
           fuzzel # launcher
+          file-roller
           glib # for gsettings
-          grim # screjnshot functionality
+          grim # screenshot functionality
           gtk3.out # for gtk-launch program
           helvum
           latestWaybar
@@ -55,7 +56,7 @@ in
           pavucontrol
           phinger-cursors
           libsForQt5.qt5ct
-          qt6ct
+          qt6Packages.qt6ct
           slurp # screenshot functionality
           sound-theme-freedesktop
           swayidle
@@ -87,7 +88,6 @@ in
         dconf.enable = true;
         evince.enable = notExcluded pkgs.gnome.evince;
         evolution.enable = mkDefault true;
-        file-roller.enable = notExcluded pkgs.gnome.file-roller;
         geary.enable = notExcluded pkgs.gnome.geary;
         gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
         seahorse.enable = notExcluded pkgs.gnome.seahorse;
@@ -164,22 +164,21 @@ in
 
         xfs.enable = false;
 
-        xserver = {
-          desktopManager.gnome.enable = false;
-            displayManager = {
-              gdm = {
-                enable = mkDefault true;
-                wayland = true;
-              };
-            };
-          enable = true; # xwayland
-          updateDbusEnvironment = true;
-        };
-
+        desktopManager.gnome.enable = false;
 
         displayManager = {
           defaultSession = mkDefault "sway-gnome";
           sessionPackages = [sway-gnome-desktop];
+
+          gdm = {
+            enable = mkDefault true;
+            wayland = true;
+          };
+        };
+
+        xserver = {
+          enable = true; # xwayland
+          updateDbusEnvironment = true;
         };
 
         pipewire = {

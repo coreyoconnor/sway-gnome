@@ -34,8 +34,8 @@ The `gnome-control-center`, `Settings`, largely works as expected:
 
 * multitasking settings
 
-Use dconf editor to remove the last panel setting from gnome-control-center if it does not start up after a
-crash.
+Use dconf editor to remove the last panel setting from gnome-control-center if `gnome-control-center` does not
+start up after a crash.
 
 ## includes
 
@@ -47,7 +47,9 @@ crash.
 
 import as a nixos module:
 
-EG: https://github.com/coreyoconnor/nix_configs/blob/main/modules/default.nix#L3
+EG: https://github.com/coreyoconnor/home-hive/blob/main/modules/default.nix#L25
+
+Use the `nixos-25.05` branch for NixOS 25.05.
 
 # Related Projects
 

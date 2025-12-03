@@ -132,7 +132,7 @@ with lib; rec {
     '';
   };
 
-  waybarRev = "4d076a71f7f3dde877c436b171599422cf8b1afa";
+  waybarRev = "161367d9617673a4ef9caf8299411dc5153464d1";
   latestWaybar = (builtins.getFlake ("github:Alexays/Waybar/" + waybarRev)).packages.${pkgs.system}.default;
 
   gnome-session-manager-overrides = pkgs.writeTextFile {
