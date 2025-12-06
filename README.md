@@ -14,7 +14,7 @@ infrastructure on NixOS.
 A limited combination of sway and gnome. This creates a custom gnome session that starts most
 gnome services along with the sway window manager.
 
-Stuff that kinds works:
+Stuff that kinda works:
 
  * flatpack in gnome software
  * keyring integration
@@ -45,9 +45,11 @@ start up after a crash.
 
 # Installation
 
-import as a nixos module:
+1. import as a nixos module:
 
 EG: https://github.com/coreyoconnor/home-hive/blob/main/modules/default.nix#L25
+
+2. You must add `include /etc/sway/config.d/*` to your sway config
 
 Use the `nixos-25.05` branch for NixOS 25.05.
 
@@ -61,6 +63,7 @@ Use the `nixos-25.05` branch for NixOS 25.05.
 
 - https://github.com/emersion/xdg-desktop-portal-wlr/wiki/%22It-doesn't-work%22-Troubleshooting-Checklist
 - https://github.com/emersion/xdg-desktop-portal-wlr/wiki/systemd-user-services,-pam,-and-environment-variables
+- https://gitlab.gnome.org/GNOME/gnome-software/-/merge_requests/2309
 
 
 

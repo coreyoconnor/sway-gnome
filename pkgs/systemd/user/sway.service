@@ -6,19 +6,28 @@ OnFailureJobMode=replace-irreversibly
 CollectMode=inactive-or-failed
 RefuseManualStart=on
 RefuseManualStop=on
-#After=gnome-session-pre.target
-#Before=gnome-session-manager.target
+
+#After=gnome-session-manager.target
+#
 #Requisite=gnome-session-initialized.target
 #PartOf=gnome-session-initialized.target
 #Before=gnome-session-initialized.target
+
 # manages the waybar instance itself
 Conflicts=waybar.service
 
 [Service]
 Slice=session.slice
-Type=simple
+# the /etc/sway/config.d/sway-gnome.conf
+# execs confirm-sway-gnome-session
+# which runs 'systemd-notify --ready'
+Type=notify
+NotifyAccess=all
 ExecStart=@swayLauncher@
 ExecStopPost=-/bin/sh -c 'test "$SERVICE_RESULT" != "exec-condition" && systemctl --user unset-environment GNOME_SETUP_DISPLAY WAYLAND_DISPLAY DISPLAY XAUTHORITY'
+
 Restart=no
 TimeoutStopSec=5
 
+# Lower down OOM score to avoid being killed by OOM-killer too early
+OOMScoreAdjust=-1000

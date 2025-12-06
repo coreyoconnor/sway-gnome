@@ -29,9 +29,7 @@ dbus-update-activation-environment --systemd ${VARIABLES:- --all}
 
 # dbus-send --print-reply --dest=org.freedesktop.portal.Settings /org/freedesktop/portal/Settings org.freedesktop.portal.Settings.ReadAll
 
-echo "starting gnome session for sway-gnome $WAYLAND_DISPLAY"
+echo "confirming startup of sway-gnome on $WAYLAND_DISPLAY"
 
-@gnomeSession@/bin/gnome-session --session=sway-gnome --systemd --debug &
-
-systemctl --user start xdg-autostart-sway-gnome.target
-
+export NOTIFY_SOCKET=${SWAY_NOTIFY_SOCKET}
+exec systemd-notify --ready

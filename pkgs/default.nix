@@ -10,6 +10,7 @@ with lib; rec {
         ./bigger-sway-drop-region.patch
       ];
   });
+
   sway = pkgs.sway.override {
     sway-unwrapped = sway-unwrapped;
     dbusSupport = false;
@@ -21,27 +22,28 @@ with lib; rec {
       export XDG_CURRENT_DESKTOP="sway:GNOME"
     '';
   };
-  start-wayland-session = pkgs.replaceVarsWith {
-    src = ./start-wayland-session;
+
+  start-sway-gnome-session = pkgs.replaceVarsWith {
+    src = ./start-sway-gnome-session;
     isExecutable = true;
     replacements = {
         inherit (pkgs) bash systemd;
+        gnomeSession = pkgs.gnome-session;
     };
   };
 
-  start-gnome-session = pkgs.replaceVarsWith {
-    src = ./start-gnome-session;
+  confirm-sway-gnome-session = pkgs.replaceVarsWith {
+    src = ./confirm-sway-gnome-session;
     isExecutable = true;
     replacements = {
         inherit (pkgs) bash dbus systemd;
-        gnomeSession = pkgs.gnome-session;
     };
   };
 
   wayland-session = pkgs.replaceVarsWith {
     src = ./wayland-sessions/sway-gnome.desktop;
     replacements = {
-        startWaylandSession = start-wayland-session;
+        startSwayGnomeSession = start-sway-gnome-session;
     };
   };
 
@@ -52,28 +54,14 @@ with lib; rec {
     };
   };
 
-  sway-launcher = pkgs.writeScript "sway-launcher.sh" ''
-    #!${pkgs.bash}/bin/bash
-
-    source /etc/profile
-
-    export MOZ_ENABLE_WAYLAND=1
-    export QT_QPA_PLATFORM="wayland-egl;xcb"
-    export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-    export GTK_USE_PORTAL=1
-    export NIXOS_XDG_OPEN_USE_PORTAL=1
-    export GNOME_SESSION_DEBUG=1
-    # Fix for some Java AWT applications (e.g. Android Studio),
-    # use this if they aren't displayed properly:
-    export _JAVA_AWT_WM_NONREPARENTING=1
-    export XDG_CURRENT_DESKTOP="sway:GNOME"
-    export XDG_SESSION_DESKTOP=GNOME
-    export XDG_SESSION_TYPE=wayland
-    export GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules
-    export XCURSOR_SIZE=48
-
-    exec ${sway}/bin/sway
-  '';
+  sway-launcher = pkgs.replaceVarsWith {
+    src = ./sway-launcher;
+    isExecutable = true;
+    replacements = {
+        inherit sway;
+        inherit (pkgs) bash;
+    };
+  };
 
   sway-service = pkgs.replaceVarsWith {
     src = ./systemd/user/sway.service;
@@ -82,41 +70,33 @@ with lib; rec {
     };
   };
 
-  sway-desktop = pkgs.replaceVarsWith {
-    src = ./desktop/sway.desktop;
-    replacements = {
-        swayLauncher = sway-launcher;
-    };
-  };
-
   sway-gnome-desktop = pkgs.stdenv.mkDerivation {
     pname = "sway-gnome-desktop";
-    version = "0.1.0";
+    version = "0.2.0";
     builder = pkgs.writeScript "builder.sh" ''
       source $stdenv/setup
 
       mkdir -p $out/share/wayland-sessions
       cp ${wayland-session} $out/share/wayland-sessions/sway-gnome.desktop
 
+      mkdir -p $out/share/gnome-session/sessions
+      cp ${./gnome-session/sessions/sway-gnome.session} \
+        $out/share/gnome-session/sessions/sway-gnome.session
+
       mkdir -p $out/lib/systemd/user
-      cp ${./systemd/user}/sway-gnome.target $out/lib/systemd/user/sway-gnome.target
       cp ${mako-sway-gnome-service} \
          $out/lib/systemd/user/mako@sway-gnome.service
       cp "${./systemd/user}/xdg-autostart-sway-gnome.target" \
          $out/lib/systemd/user/xdg-autostart-sway-gnome.target
+      cp "${./systemd/user}/sway-gnome-session-basic-services.target" \
+         $out/lib/systemd/user/sway-gnome-session-basic-services.target
       cp ${sway-service} $out/lib/systemd/user/sway.service
       mkdir -p $out/lib/systemd/user/gnome-session@sway-gnome.target.d
       cp ${./systemd/user}/gnome-session@sway-gnome.target.d/session.conf \
          $out/lib/systemd/user/gnome-session@sway-gnome.target.d/session.conf
 
-      mkdir -p $out/share/gnome-session/sessions
-      cp ${./gnome-session/sessions/sway-gnome.session} $out/share/gnome-session/sessions/sway-gnome.session
-
       #mkdir -p $out/lib/systemd/user/gnome-session-manager@.service.d
       #cp ${gnome-session-manager-overrides} $out/lib/systemd/user/gnome-session-manager@.service.d/overrides.conf
-
-      mkdir -p $out/share/applications
-      cp ${sway-desktop} $out/share/applications/sway.desktop
     '';
     passthru = {
       providedSessions = ["sway-gnome"];
@@ -140,7 +120,7 @@ with lib; rec {
     text = ''
       [Service]
       ExecStart=
-      ExecStart=${pkgs.gnome-session}/bin/gnome-session --systemd-service --session=%i --debug --failsafe
+      ExecStart=${pkgs.gnome-session}/bin/gnome-session --session=%i --debug --failsafe
     '';
   };
 }

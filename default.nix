@@ -23,42 +23,22 @@ in
       environment = {
         etc = {
           "sway/config.d/sway-gnome.conf".source = pkgs.writeText "sway-gnome.conf" ''
-            exec ${start-gnome-session}
+            exec --no-startup-id ${confirm-sway-gnome-session}
           '';
         };
 
-        pathsToLink = [
-          "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
-          "/share/nautilus-python/extensions"
-        ];
-
-        # Let nautilus find extensions
-        # TODO: Create nautilus-with-extensions package
-        sessionVariables.NAUTILUS_4_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-4";
-
-        # Override default mimeapps for nautilus
-        sessionVariables.XDG_DATA_DIRS = ["${mimeAppsList}/share"];
-
         systemPackages = with pkgs; [
-          adwaita-icon-theme
-          gnome-bluetooth
-          gnome-color-manager
-          gnome-control-center
           qt6Packages.qtwayland
           fuzzel # launcher
           file-roller
-          glib # for gsettings
           grim # screenshot functionality
-          gtk3.out # for gtk-launch program
           helvum
           latestWaybar
-          orca
           pavucontrol
           phinger-cursors
           libsForQt5.qt5ct
           qt6Packages.qt6ct
           slurp # screenshot functionality
-          sound-theme-freedesktop
           swayidle
           swaylock
           sway-gnome-desktop
@@ -66,8 +46,6 @@ in
           wayland
           wlogout
           wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-          xdg-user-dirs
-          xdg-user-dirs-gtk # Used to create the default bookmarks
           xdg-utils
         ];
       };
@@ -79,23 +57,11 @@ in
         source-sans
       ];
 
-      hardware.bluetooth.enable = mkDefault true;
-
-      networking.networkmanager.enable = mkDefault true;
-
       programs = {
-        bash.vteIntegration = true;
-        dconf.enable = true;
-        evince.enable = notExcluded pkgs.gnome.evince;
-        evolution.enable = mkDefault true;
-        geary.enable = notExcluded pkgs.gnome.geary;
-        gnome-disks.enable = notExcluded pkgs.gnome.gnome-disk-utility;
-        seahorse.enable = notExcluded pkgs.gnome.seahorse;
         sway = {
           enable = true;
           package = null;
         };
-        zsh.vteIntegration = true;
       };
 
       qt = {
@@ -104,14 +70,7 @@ in
         style = mkDefault null; # qt5 and qt6 config expect this.
       };
 
-      security = {
-        polkit.enable = true;
-      };
-
       services = {
-        accounts-daemon.enable = true;
-        avahi.enable = mkDefault true;
-
         dbus = {
           enable = true;
           packages = [pkgs.gcr];
@@ -119,50 +78,32 @@ in
 
         gnome = {
           # all appear to work
-          # core-developer-tools.enable = mkDefault true;
+          core-developer-tools.enable = mkDefault true;
 
-          # need to pick a subset below
-          core-os-services.enable = false;
+          # most appear to work
+          core-os-services.enable = true;
+          gnome-remote-desktop.enable = mkForce false;
+
           # all appear to work
           core-apps.enable = true;
 
+          # close enough
+          core-shell.enable = true;
+
           # appears to work
           at-spi2-core.enable = true;
-          # probably works? valent can't query but I get lost debugging it
-          evolution-data-server.enable = mkDefault true;
 
           # all appear to work
           games.enable = mkDefault true;
 
           glib-networking.enable = true;
           gnome-initial-setup.enable = false;
-          gnome-keyring.enable = true;
-          gnome-online-accounts.enable = mkDefault true;
-          gnome-settings-daemon.enable = true;
-          sushi.enable = notExcluded pkgs.gnome.sushi;
-          localsearch.enable = mkDefault true;
-          tinysparql.enable = mkDefault true;
+          sushi.enable = notExcluded pkgs.sushi;
         };
-
-        gvfs.enable = true;
-
-        hardware.bolt.enable = mkDefault true;
 
         libinput.enable = mkDefault true;
 
-        orca.enable = notExcluded pkgs.orca;
-
-        power-profiles-daemon.enable = mkDefault true;
-
-        system-config-printer.enable = mkIf config.services.printing.enable (mkDefault true);
-
         udev.packages = with pkgs; [gnome-settings-daemon];
-
-        udisks2.enable = true;
-
-        upower.enable = config.powerManagement.enable;
-
-        xfs.enable = false;
 
         desktopManager.gnome.enable = false;
 
@@ -178,7 +119,6 @@ in
 
         xserver = {
           enable = true; # xwayland
-          updateDbusEnvironment = true;
         };
 
         pipewire = {
@@ -214,9 +154,6 @@ in
           };
         };
       };
-
-      xdg.icons.enable = true;
-      xdg.mime.enable = true;
 
       xdg.portal = {
         config = {

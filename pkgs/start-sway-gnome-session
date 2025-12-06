@@ -21,28 +21,18 @@
 #    may rely on the XDG_SESSION_TYPE variable to select the backend.
 #    Ensure that it is always set to `wayland`.
 #
-# 4. The common way to autostart a systemd service along with the desktop
-#    environment is to add it to a `graphical-session.target`. However, systemd
-#    forbids starting the graphical session target directly and encourages use
-#    of an environment-specific target units. Therefore, the integration
-#    package here provides and uses `sway-gnome.target` which would bind to
-#    the `graphical-session.target`.
-
-# 5. Optionally, stop the target and unset the variables when the compositor
-#    exits.
-#
 # References:
 #  - https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
 #  - https://github.com/emersion/xdg-desktop-portal-wlr/wiki/systemd-user-services,-pam,-and-environment-variables
 #  - https://www.freedesktop.org/software/systemd/man/systemd.special.html#graphical-session.target
 #  - https://systemd.io/DESKTOP_ENVIRONMENTS/
-#
+set -ex
+
 export XDG_CURRENT_DESKTOP=sway:GNOME
 export XDG_SESSION_DESKTOP=GNOME
 export XDG_SESSION_TYPE=wayland
 VARIABLES="XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE"
 VARIABLES="${VARIABLES} DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY"
-SESSION_TARGET="sway-gnome.target"
 WITH_CLEANUP=1
 
 export PATH=@systemd@/bin:$PATH
@@ -71,7 +61,10 @@ session_cleanup () {
 }
 trap session_cleanup INT TERM
 
-systemctl --user start --wait "$SESSION_TARGET"
+@gnomeSession@/bin/gnome-session --session=sway-gnome --debug
+EXIT_CODE=$?
 
 # run cleanup handler on normal exit
 session_cleanup
+
+exit $EXIT_CODE

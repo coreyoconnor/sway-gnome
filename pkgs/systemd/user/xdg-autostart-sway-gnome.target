@@ -1,7 +1,7 @@
 [Unit]
 After=graphical-session.target
-
-After=gnome-session-initialized.target
+After=sway.service
+After=gnome-session.target
 
 Wants=xdg-desktop-autostart.target
 Before=xdg-desktop-autostart.target
