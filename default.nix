@@ -20,6 +20,7 @@ in
     };
 
     config = mkIf cfg.enable {
+
       environment = {
         etc = {
           "sway/config.d/sway-gnome.conf".source = pkgs.writeText "sway-gnome.conf" ''
