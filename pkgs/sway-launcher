@@ -13,7 +13,7 @@ export GNOME_SESSION_DEBUG=1
 # use this if they aren't displayed properly:
 export _JAVA_AWT_WM_NONREPARENTING=1
 export XDG_CURRENT_DESKTOP="sway:GNOME"
-export XDG_SESSION_DESKTOP=GNOME
+export XDG_SESSION_DESKTOP=sway
 export XDG_SESSION_TYPE=wayland
 export XCURSOR_SIZE=48
 export SWAY_NOTIFY_SOCKET=${NOTIFY_SOCKET}

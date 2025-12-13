@@ -159,10 +159,19 @@ in
       xdg.portal = {
         config = {
           sway = {
+            default = [
+              "gtk"
+            ];
             "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
-            "org.freedesktop.impl.portal.ScreenCast" = "wlr";
             "org.freedesktop.impl.portal.Screenshot" = "wlr";
             "org.freedesktop.impl.portal.Inhibit" = "none";
+            "org.freedesktop.impl.portal.Background" = "none";
+            "org.freedesktop.impl.portal.Clipboard" = "none";
+            "org.freedesktop.impl.portal.GlobalShortcuts" = "none";
+            "org.freedesktop.impl.portal.InputCapture" = "none";
+            "org.freedesktop.impl.portal.RemoteDesktop" = "none";
+            "org.freedesktop.impl.portal.Usb" = "none";
+            "org.freedesktop.impl.portal.Wallpaper" = "none";
           };
         };
         enable = true;
