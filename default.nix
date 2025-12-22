@@ -29,7 +29,8 @@ in
         };
 
         systemPackages = with pkgs; [
-          qt6Packages.qtwayland
+          adwaita-qt
+          adwaita-qt6
           fuzzel # launcher
           file-roller
           grim # screenshot functionality
@@ -38,6 +39,8 @@ in
           pavucontrol
           phinger-cursors
           libsForQt5.qt5ct
+          qadwaitadecorations-qt6
+          qt6Packages.qtwayland
           qt6Packages.qt6ct
           slurp # screenshot functionality
           swayidle
@@ -67,8 +70,8 @@ in
 
       qt = {
         enable = mkDefault true;
-        platformTheme = mkDefault null; # qt5 and qt6 config expect this.
-        style = mkDefault null; # qt5 and qt6 config expect this.
+        platformTheme = null; # qt5 and qt6 config expect this.
+        style = null; # qt5 and qt6 config expect this.
       };
 
       services = {
