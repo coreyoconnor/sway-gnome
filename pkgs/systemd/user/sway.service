@@ -7,11 +7,14 @@ CollectMode=inactive-or-failed
 RefuseManualStart=on
 RefuseManualStop=on
 
-#After=gnome-session-manager.target
-#
-#Requisite=gnome-session-initialized.target
-#PartOf=gnome-session-initialized.target
-#Before=gnome-session-initialized.target
+After=graphical-session-pre.target dbus.service
+Wants=graphical-session-pre.target
+Before=xdg-desktop-autostart.target
+Before=xdg-desktop-portal.service
+
+Requisite=graphical-session.target
+PartOf=graphical-session.target
+Before=graphical-session.target
 
 # manages the waybar instance itself
 Conflicts=waybar.service
