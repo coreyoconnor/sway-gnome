@@ -2,16 +2,18 @@
   config,
   pkgs,
   lib,
+  swayfx,
   ...
 }:
 with lib; rec {
-  sway-unwrapped = pkgs.sway-unwrapped.overrideAttrs (_: old: {
-      patches = old.patches ++ [
-        ./bigger-sway-drop-region.patch
-      ];
-  });
+  # sway-unwrapped = pkgs.sway-unwrapped.overrideAttrs (_: old: {
+  #     patches = old.patches ++ [
+  #       ./bigger-sway-drop-region.patch
+  #     ];
+  # });
+  sway-unwrapped = swayfx.packages.${stdenv.hostPlatform.system};
 
-  sway = pkgs.sway.override {
+  sway = swayfx.packages..override {
     sway-unwrapped = sway-unwrapped;
     dbusSupport = false;
     enableXWayland = true;
