@@ -2,9 +2,19 @@
   description = "sway-gnome modules";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:coreyoconnor/nixpkgs/main";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     swayfx = {
       url = "github:WillPower3309/swayfx/master";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+      };
+    };
+    waybar = {
+      url = "github:Alexays/Waybar/master";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+      };
     };
   };
 
@@ -13,10 +23,11 @@
     flake-utils,
     nixpkgs,
     swayfx,
+    waybar,
   }:
     {
       nixosModules = {
-        default = import ./default.nix;
+        default = import ./module.nix { inherit swayfx waybar; };
       };
     }
     // flake-utils.lib.eachDefaultSystem (system: {

@@ -2,18 +2,19 @@
   config,
   pkgs,
   lib,
-  swayfx,
   ...
 }:
-with lib; rec {
+with lib; let
+  cfg = config.sway-gnome;
+  sway-unwrapped = cfg.package;
+in rec {
   # sway-unwrapped = pkgs.sway-unwrapped.overrideAttrs (_: old: {
   #     patches = old.patches ++ [
   #       ./bigger-sway-drop-region.patch
   #     ];
   # });
-  sway-unwrapped = swayfx.packages.${stdenv.hostPlatform.system};
 
-  sway = swayfx.packages..override {
+  sway = pkgs.sway.override {
     sway-unwrapped = sway-unwrapped;
     dbusSupport = false;
     enableXWayland = true;
@@ -113,9 +114,6 @@ with lib; rec {
       inode/directory=nautilus.desktop;org.gnome.Nautilus.desktop
     '';
   };
-
-  waybarRev = "161367d9617673a4ef9caf8299411dc5153464d1";
-  latestWaybar = (builtins.getFlake ("github:Alexays/Waybar/" + waybarRev)).packages.${pkgs.system}.default;
 
   gnome-session-manager-overrides = pkgs.writeTextFile {
     name = "overrides.conf";

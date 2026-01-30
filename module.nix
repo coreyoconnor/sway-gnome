@@ -1,4 +1,6 @@
-{
+{ swayfx
+  waybar
+}: {
   config,
   pkgs,
   lib,
@@ -16,10 +18,17 @@ in
           type = types.bool;
           default = false;
         };
+        package = mkOption {
+          type = types.pkg;
+          default = swayfx.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        };
       };
     };
 
     config = mkIf cfg.enable {
+      nixpkgs.overlays = [
+        waybar.overlays.waybar
+      ];
 
       environment = {
         etc = {
@@ -35,7 +44,7 @@ in
           file-roller
           grim # screenshot functionality
           helvum
-          latestWaybar
+          waybar
           pavucontrol
           phinger-cursors
           libsForQt5.qt5ct
@@ -64,7 +73,7 @@ in
       programs = {
         sway = {
           enable = true;
-          package = null;
+          package = cfg.package;
         };
       };
 
