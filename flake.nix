@@ -22,6 +22,7 @@
     self,
     flake-utils,
     nixpkgs,
+    nixpkgs-unstable,
     swayfx,
     waybar,
   }:

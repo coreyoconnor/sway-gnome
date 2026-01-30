@@ -1,4 +1,4 @@
-{ swayfx
+{ swayfx,
   waybar
 }: {
   config,
@@ -19,7 +19,7 @@ in
           default = false;
         };
         package = mkOption {
-          type = types.pkg;
+          type = types.package;
           default = swayfx.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
       };
@@ -60,6 +60,7 @@ in
           wlogout
           wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
           xdg-utils
+          cfg.package
         ];
       };
 
@@ -73,7 +74,7 @@ in
       programs = {
         sway = {
           enable = true;
-          package = cfg.package;
+          package = null;
         };
       };
 
