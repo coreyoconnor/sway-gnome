@@ -16,11 +16,18 @@
         nixpkgs.follows = "nixpkgs-unstable";
       };
     };
+    flameshot = {
+      url = "github:flameshot-org/flameshot/master";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+      };
+    };
   };
 
   outputs = {
     self,
     flake-utils,
+    flameshot,
     nixpkgs,
     nixpkgs-unstable,
     swayfx,
@@ -28,7 +35,7 @@
   }:
     {
       nixosModules = {
-        default = import ./module.nix { inherit swayfx waybar; };
+        default = import ./module.nix { inherit flameshot swayfx waybar; };
       };
     }
     // flake-utils.lib.eachDefaultSystem (system: {

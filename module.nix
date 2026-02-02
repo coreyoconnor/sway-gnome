@@ -1,4 +1,5 @@
-{ swayfx,
+{ flameshot,
+  swayfx,
   waybar
 }: {
   config,
@@ -61,6 +62,7 @@ in
           wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
           xdg-utils
           cfg.package
+          flameshot.packages.${pkgs.stdenv.hostPlatform.system}.default
         ];
       };
 
