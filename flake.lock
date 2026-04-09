@@ -98,11 +98,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1773931013,
-        "narHash": "sha256-7o8g1N8bngv+HYZdweQ2fhX/NLzctMdRF++juTAgcJI=",
+        "lastModified": 1775607803,
+        "narHash": "sha256-jtu3vM3EORyPhoAHkvgf1fFTSCIQ59ieDy53CAnIbgc=",
         "owner": "flameshot-org",
         "repo": "flameshot",
-        "rev": "f9ea95435728b99473dfa9431f4d532590a7ecff",
+        "rev": "526fb82c8152a9be38522ae985d30ab866ff7946",
         "type": "github"
       },
       "original": {
@@ -321,11 +321,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773910498,
-        "narHash": "sha256-JwXYw4phtJ/PljzxX46NQROcaUqoloBlXOZ7PxFoYsg=",
+        "lastModified": 1775558724,
+        "narHash": "sha256-tjZmQ+H9osk0MA7LB/JBCO8K+dzqNmxdjU2mbVRUsQ8=",
         "owner": "Alexays",
         "repo": "Waybar",
-        "rev": "6cb68737e64a851797a26566c7859b53eb2fd8bc",
+        "rev": "202ae4bd5f2d8865704761211b3004d2fcd2d7d8",
         "type": "github"
       },
       "original": {
