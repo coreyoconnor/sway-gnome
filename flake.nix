@@ -35,7 +35,7 @@
   }:
     {
       nixosModules = {
-        default = import ./module.nix { inherit flameshot swayfx waybar; };
+        default = import ./modules { inherit flameshot swayfx waybar; };
       };
     }
     // flake-utils.lib.eachDefaultSystem (system: {
