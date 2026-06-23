@@ -35,7 +35,10 @@
   }:
     {
       nixosModules = {
-        default = import ./modules { inherit flameshot swayfx waybar; };
+        default = import ./modules {
+          inherit flameshot swayfx waybar;
+          sway-gnome-pkgs-src = ./pkgs;
+        };
       };
     }
     // flake-utils.lib.eachDefaultSystem (system: {

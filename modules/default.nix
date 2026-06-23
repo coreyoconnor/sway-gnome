@@ -1,6 +1,7 @@
 { flameshot,
   swayfx,
-  waybar
+  waybar,
+  sway-gnome-pkgs-src
 }: {
   config,
   pkgs,
@@ -10,7 +11,7 @@
 with lib; let
   cfg = config.sway-gnome;
   notExcluded = pkg: mkDefault (!(lib.elem pkg config.environment.gnome.excludePackages));
-  sway-gnome-pkgs = import ./pkgs {inherit config pkgs lib;};
+  sway-gnome-pkgs = import sway-gnome-pkgs-src {inherit config pkgs lib;};
 in with sway-gnome-pkgs;
 {
   imports = [
@@ -46,18 +47,9 @@ in with sway-gnome-pkgs;
       };
 
       systemPackages = with pkgs; [
-        adwaita-qt
-        adwaita-qt6
-        fuzzel # launcher
-        file-roller
         grim # screenshot functionality
         waybar
-        pavucontrol
         phinger-cursors
-        libsForQt5.qt5ct
-        qadwaitadecorations-qt6
-        qt6Packages.qtwayland
-        qt6Packages.qt6ct
         slurp # screenshot functionality
         swayidle
         swaylock
@@ -65,31 +57,16 @@ in with sway-gnome-pkgs;
         awww
         wayland
         wlogout
-        wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-        xdg-utils
         cfg.package
         flameshot.packages.${pkgs.stdenv.hostPlatform.system}.default
       ];
     };
-
-    fonts.packages = with pkgs; [
-      cantarell-fonts
-      dejavu_fonts
-      source-code-pro # Default monospace font in 3.32
-      source-sans
-    ];
 
     programs = {
       sway = {
         enable = true;
         package = null;
       };
-    };
-
-    qt = {
-      enable = mkDefault true;
-      platformTheme = null; # qt5 and qt6 config expect this.
-      style = null; # qt5 and qt6 config expect this.
     };
 
     services = {
@@ -145,7 +122,6 @@ in with sway-gnome-pkgs;
           support32Bit = mkDefault true;
         };
         pulse.enable = mkDefault true;
-        wireplumber.enable = mkDefault true;
       };
     };
 

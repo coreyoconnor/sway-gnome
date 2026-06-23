@@ -8,6 +8,11 @@ with lib; let
   cfg = config.sway-gnome;
 in {
   config = mkIf cfg.enable {
+    environment = {
+      systemPackages = with pkgs; [
+        fuzzel # launcher
+      ];
+    };
   };
 }
 
