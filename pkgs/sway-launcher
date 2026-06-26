@@ -4,7 +4,7 @@ set -ex
 . /etc/profile
 
 export MOZ_ENABLE_WAYLAND=1
-export QT_QPA_PLATFORM=wayland
+export QT_QPA_PLATFORM=wayland-egl
 export QT_QPA_PLATFORMTHEME=gnome
 export QT_WAYLAND_DECORATION=adwaita
 export QT_STYLE_OVERRIDE=adwaita-dark
@@ -21,5 +21,9 @@ export XDG_SESSION_TYPE=wayland
 export XCURSOR_SIZE=48
 export SWAY_NOTIFY_SOCKET=${NOTIFY_SOCKET}
 unset NOTIFY_SOCKET
+
+export QT_IM_MODULE=fcitx
+export GTK_IM_MODULE=fcitx
+export ANKI_WAYLAND=1
 
 exec @sway@/bin/sway

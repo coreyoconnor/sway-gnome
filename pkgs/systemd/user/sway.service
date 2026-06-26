@@ -7,17 +7,19 @@ CollectMode=inactive-or-failed
 RefuseManualStart=on
 RefuseManualStop=on
 
-After=graphical-session-pre.target dbus.service
-Wants=graphical-session-pre.target
-Before=xdg-desktop-autostart.target
-Before=xdg-desktop-portal.service
+After=gnome-session-manager.target
 
-Requisite=graphical-session.target
-PartOf=graphical-session.target
-Before=graphical-session.target
+Requisite=gnome-session-initialized.target
+PartOf=gnome-session-initialized.target
+Before=gnome-session-initialized.target
+
+AssertEnvironment=XDG_SESSION_TYPE=wayland
 
 # manages the waybar instance itself
 Conflicts=waybar.service
+
+Conflicts=org.gnome.Shell.target
+Conflicts=org.gnome.Shell@.service
 
 [Service]
 Slice=session.slice

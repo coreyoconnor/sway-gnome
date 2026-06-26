@@ -93,6 +93,8 @@ in rec {
          $out/lib/systemd/user/xdg-autostart-sway-gnome.target
       cp "${./systemd/user}/sway-gnome-session-basic-services.target" \
          $out/lib/systemd/user/sway-gnome-session-basic-services.target
+      cp "${./systemd/user}/sway-gnome-session-services.target" \
+         $out/lib/systemd/user/sway-gnome-session-services.target
       cp ${sway-service} $out/lib/systemd/user/sway.service
       mkdir -p $out/lib/systemd/user/gnome-session@sway-gnome.target.d
       cp ${./systemd/user}/gnome-session@sway-gnome.target.d/session.conf \

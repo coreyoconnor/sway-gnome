@@ -107,6 +107,10 @@ in with sway-gnome-pkgs;
       desktopManager.gnome.enable = false;
 
       displayManager = {
+        gdm = {
+          enable = true;
+          autoSuspend = false;
+        };
         defaultSession = mkDefault "sway-gnome";
         sessionPackages = [sway-gnome-desktop];
       };
@@ -156,14 +160,13 @@ in with sway-gnome-pkgs;
           ];
           "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
           "org.freedesktop.impl.portal.Screenshot" = "wlr";
+          "org.freedesktop.impl.portal.ScreenCast" = "wlr";
           "org.freedesktop.impl.portal.Inhibit" = "none";
           "org.freedesktop.impl.portal.Background" = "none";
-          "org.freedesktop.impl.portal.Clipboard" = "none";
-          "org.freedesktop.impl.portal.GlobalShortcuts" = "none";
-          "org.freedesktop.impl.portal.InputCapture" = "none";
-          "org.freedesktop.impl.portal.RemoteDesktop" = "none";
-          "org.freedesktop.impl.portal.Usb" = "none";
-          "org.freedesktop.impl.portal.Wallpaper" = "none";
+          "org.freedesktop.impl.portal.GlobalShortcuts" = "gnome";
+          "org.freedesktop.impl.portal.Clipboard" = "gnome";
+          "org.freedesktop.impl.portal.InputCapture" = "gnome";
+          "org.freedesktop.impl.portal.Usb" = "gnome";
         };
       };
       enable = true;

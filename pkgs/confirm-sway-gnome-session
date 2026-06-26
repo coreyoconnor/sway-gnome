@@ -8,27 +8,41 @@ VARIABLES="${VARIABLES} QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME QT_WAYLAND_DECORATI
 VARIABLES="${VARIABLES} QT_WAYLAND_DISABLE_WINDOWDECORATION"
 VARIABLES="${VARIABLES} GTK_USE_PORTAL NIXOS_XDG_OPEN_USE_PORTAL"
 VARIABLES="${VARIABLES} _JAVA_AWT_WM_NONREPARENTING"
-VARIABLES="${VARIABLES} GST_PLUGIN_SYSTEM_PATH_1_0 GI_TYPELIB_PATH GRL_PLUGIN_PATH"
+VARIABLES="${VARIABLES} GI_TYPELIB_PATH"
 VARIABLES="${VARIABLES} GIO_EXTRA_MODULES GDK_PIXBUF_MODULE_FILE"
 VARIABLES="${VARIABLES} XCURSOR_THEME XCURSOR_SIZE"
 VARIABLES="${VARIABLES} PATH"
 
 # fcitx5
-VARIABLES="${VARIABLES} XMODIFIERS QT_PLUGIN_PATH GTK_IM_MODULE QT_IM_MODULE"
+VARIABLES="${VARIABLES} XMODIFIERS QT_PLUGIN_PATH GTK_IM_MODULE QT_IM_MODULE ANKI_WAYLAND"
 
 export PATH=@dbus@/bin:@systemd@/bin:$PATH
 
 # shellcheck disable=SC2086
 systemctl --user import-environment $VARIABLES
 
-# DBus activation environment is independent from systemd. While most of
-# dbus-activated services are already using `SystemdService` directive, some
-# still don't and thus we should set the dbus environment with a separate
-# command.
-# shellcheck disable=SC2086
-dbus-update-activation-environment --systemd ${VARIABLES:- --all}
-
 # dbus-send --print-reply --dest=org.freedesktop.portal.Settings /org/freedesktop/portal/Settings org.freedesktop.portal.Settings.ReadAll
+
+# Set the maximum wait time in seconds
+TIMEOUT=5
+DELAY=0.1
+MAX_ATTEMPTS=$(echo "$TIMEOUT / $DELAY" | bc 2>/dev/null || echo 50)
+ATTEMPTS=0
+
+echo "Waiting for Wayland display to become ready..."
+
+# Loop until WAYLAND_DISPLAY is set and the socket file exists in XDG_RUNTIME_DIR
+while [[ -z "$WAYLAND_DISPLAY" || ! -S "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}" ]]; do
+    if (( ATTEMPTS >= MAX_ATTEMPTS )); then
+        echo "Error: Timed out waiting for Wayland display after ${TIMEOUT} seconds." >&2
+        exit 1
+    fi
+
+    sleep $DELAY
+    ((ATTEMPTS++))
+done
+
+echo "Wayland display (${WAYLAND_DISPLAY}) is ready. Proceeding..."
 
 echo "confirming startup of sway-gnome on $WAYLAND_DISPLAY"
 
