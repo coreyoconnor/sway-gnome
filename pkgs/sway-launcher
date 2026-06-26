@@ -24,6 +24,7 @@ unset NOTIFY_SOCKET
 
 export QT_IM_MODULE=fcitx
 export GTK_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
 export ANKI_WAYLAND=1
 
 exec @sway@/bin/sway

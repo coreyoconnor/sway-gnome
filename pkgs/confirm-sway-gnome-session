@@ -20,6 +20,7 @@ export PATH=@dbus@/bin:@systemd@/bin:$PATH
 
 # shellcheck disable=SC2086
 systemctl --user import-environment $VARIABLES
+dbus-update-activation-environment --systemd $VARIABLES
 
 # dbus-send --print-reply --dest=org.freedesktop.portal.Settings /org/freedesktop/portal/Settings org.freedesktop.portal.Settings.ReadAll
 
