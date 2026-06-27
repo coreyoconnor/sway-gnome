@@ -22,6 +22,15 @@ export PATH=@dbus@/bin:@systemd@/bin:$PATH
 systemctl --user import-environment $VARIABLES
 dbus-update-activation-environment --systemd $VARIABLES
 
+# Also update gnome-session's internal environment so apps it spawns directly inherit them
+for var in $VARIABLES; do
+    if [ -n "${!var}" ]; then
+        dbus-send --session --dest=org.gnome.SessionManager --type=method_call \
+            /org/gnome/SessionManager org.gnome.SessionManager.Setenv \
+            string:"$var" string:"${!var}" || true
+    fi
+done
+
 # dbus-send --print-reply --dest=org.freedesktop.portal.Settings /org/freedesktop/portal/Settings org.freedesktop.portal.Settings.ReadAll
 
 # Set the maximum wait time in seconds
