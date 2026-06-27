@@ -13,6 +13,8 @@ Requisite=gnome-session-initialized.target
 PartOf=gnome-session-initialized.target
 Before=gnome-session-initialized.target
 
+Before=xdg-desktop-autostart.target
+
 AssertEnvironment=XDG_SESSION_TYPE=wayland
 
 # manages the waybar instance itself

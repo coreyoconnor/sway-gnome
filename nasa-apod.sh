@@ -54,4 +54,4 @@ else
 	get_img "$url"
 fi
 
-swww img $latest_image_path --transition-type outer
+awww img $latest_image_path --transition-type outer

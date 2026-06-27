@@ -152,6 +152,8 @@ in with sway-gnome-pkgs;
       };
     };
 
+    xdg.autostart.enable = true;
+
     xdg.portal = {
       config = {
         sway = {

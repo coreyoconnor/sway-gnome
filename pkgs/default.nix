@@ -89,8 +89,6 @@ in rec {
       mkdir -p $out/lib/systemd/user
       cp ${mako-sway-gnome-service} \
          $out/lib/systemd/user/mako@sway-gnome.service
-      cp "${./systemd/user}/xdg-autostart-sway-gnome.target" \
-         $out/lib/systemd/user/xdg-autostart-sway-gnome.target
       cp "${./systemd/user}/sway-gnome-session-basic-services.target" \
          $out/lib/systemd/user/sway-gnome-session-basic-services.target
       cp "${./systemd/user}/sway-gnome-session-services.target" \
@@ -99,9 +97,6 @@ in rec {
       mkdir -p $out/lib/systemd/user/gnome-session@sway-gnome.target.d
       cp ${./systemd/user}/gnome-session@sway-gnome.target.d/session.conf \
          $out/lib/systemd/user/gnome-session@sway-gnome.target.d/session.conf
-
-      #mkdir -p $out/lib/systemd/user/gnome-session-manager@.service.d
-      #cp ${gnome-session-manager-overrides} $out/lib/systemd/user/gnome-session-manager@.service.d/overrides.conf
     '';
     passthru = {
       providedSessions = ["sway-gnome"];
