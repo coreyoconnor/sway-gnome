@@ -23,6 +23,7 @@ export SWAY_NOTIFY_SOCKET=${NOTIFY_SOCKET}
 unset NOTIFY_SOCKET
 
 export QT_IM_MODULE=fcitx
+export QT_IM_MODULES=wayland;fcitx;ibus
 export GTK_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 export ANKI_WAYLAND=1
