@@ -17,10 +17,10 @@ Before=gnome-session.target
 Requires=sway.service
 After=sway.service
 
-Conflicts=gnome-session-basic-services.target
+Wants=xdg-desktop-autostart.target
+Before=xdg-desktop-autostart.target
 
-# TODO: no longer required? Superceeded by ???
-# Wants=xdg-autostart-sway-gnome.target
+Conflicts=gnome-session-basic-services.target
 
 # Manages a11y settings, starts Orca when needed
 Wants=org.gnome.SettingsDaemon.A11ySettings.target
