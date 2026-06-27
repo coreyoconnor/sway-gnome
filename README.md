@@ -5,19 +5,19 @@
 --------------------------------------------------------------------------------
 
 Allows you to use [Sway](https://github.com/swaywm/sway), a tiling window manager, with GNOME 3 session
-infrastructure on NixOS.
+infrastructure on NixOS 26.05.
 
 ## Work in progress
+
+- Proper systemd integration. (Huge props to GNOME devs for making this work!)
+- Most gnome services available.
+- flatpack in gnome software
+- keyring integration
 
 ## What this enables
 
 A limited combination of sway and gnome. This creates a custom gnome session that starts most
 gnome services along with the sway window manager.
-
-Stuff that kinda works:
-
- * flatpack in gnome software
- * keyring integration
 
 The `gnome-control-center`, `Settings`, largely works as expected:
 
@@ -49,7 +49,7 @@ start up after a crash.
 
 EG: https://github.com/coreyoconnor/home-hive/blob/main/modules/default.nix#L25
 
-2. You must add `include /etc/sway/config.d/*` to your sway config
+2. You **must** add `include /etc/sway/config.d/*` to your sway config
 
 Use the `nixos-25.05` branch for NixOS 25.05.
 
