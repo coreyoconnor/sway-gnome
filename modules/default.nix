@@ -20,6 +20,7 @@ in with sway-gnome-pkgs;
     ./launcher.nix
     ./look.nix
     ./media-controls.nix
+    ./xdg-portals.nix
   ];
   options = {
     sway-gnome = {
@@ -150,32 +151,6 @@ in with sway-gnome-pkgs;
           };
         };
       };
-    };
-
-    xdg.autostart.enable = true;
-
-    xdg.portal = {
-      config = {
-        sway = {
-          default = [
-            "gtk"
-          ];
-          "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
-          "org.freedesktop.impl.portal.Screenshot" = "wlr";
-          "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-          "org.freedesktop.impl.portal.Inhibit" = "none";
-          "org.freedesktop.impl.portal.Background" = "none";
-          "org.freedesktop.impl.portal.GlobalShortcuts" = "gnome";
-          "org.freedesktop.impl.portal.Clipboard" = "gnome";
-          "org.freedesktop.impl.portal.InputCapture" = "gnome";
-          "org.freedesktop.impl.portal.Usb" = "gnome";
-        };
-      };
-      enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
-      ];
-      wlr.enable = true;
     };
   };
 }
