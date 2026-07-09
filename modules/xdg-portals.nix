@@ -17,11 +17,12 @@ in {
             "gtk"
           ];
           "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+          "org.freedesktop.impl.portal.FileChooser" = "gnome";
           "org.freedesktop.impl.portal.Screenshot" = "wlr";
           "org.freedesktop.impl.portal.ScreenCast" = "wlr";
           "org.freedesktop.impl.portal.Inhibit" = "none";
           "org.freedesktop.impl.portal.Background" = "none";
-          "org.freedesktop.impl.portal.GlobalShortcuts" = "gnome";
+          "org.freedesktop.impl.portal.GlobalShortcuts" = "none";
           "org.freedesktop.impl.portal.Clipboard" = "gnome";
           "org.freedesktop.impl.portal.InputCapture" = "gnome";
           "org.freedesktop.impl.portal.Usb" = "gnome";
