@@ -15,6 +15,7 @@ export GNOME_SESSION_DEBUG=1
 # Fix for some Java AWT applications (e.g. Android Studio),
 # use this if they aren't displayed properly:
 export _JAVA_AWT_WM_NONREPARENTING=1
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 export XDG_CURRENT_DESKTOP="sway:GNOME"
 export XDG_SESSION_DESKTOP=sway
 export XDG_SESSION_TYPE=wayland

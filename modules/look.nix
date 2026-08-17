@@ -15,6 +15,8 @@ in {
       source-sans
     ];
 
+    gtk.iconCache.enable = mkDefault true;
+
     qt = {
       enable = mkDefault true;
       platformTheme = null; # qt5 and qt6 config expect this.
@@ -29,6 +31,10 @@ in {
         qadwaitadecorations-qt6
         qt6Packages.qtwayland
         qt6Packages.qt6ct
+        adwaita-icon-theme
+        hicolor-icon-theme
+        gnome-icon-theme
+        qogir-icon-theme
       ];
     };
 
